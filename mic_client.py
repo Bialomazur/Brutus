@@ -8,8 +8,8 @@ CHANNELS = 1
 RATE = 44100
 CHUNK = 4096
 
-HOST = "192.168.2.100"
-#HOST = "80.142.83.20"
+#HOST = "192.168.2.100"
+HOST = "80.142.80.200"
 PORT = 8082
 
 audio = pyaudio.PyAudio()

@@ -68,16 +68,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             if str(key) == "Key.enter":
                 command = self.Input.text()
                 if self.Input.text() == "ip" or self.Input.text() == "get_ip":
-                    try:
-                        r = requests.get('https://api.ipify.org?format=json', timeout=15)
-                        content = r.content
-                        content = content.decode("Cp1252")
-                        content = json.loads(content)
-                        ip_address = content["ip"]
-                        print(ip_address)
-                    except Exception as e:
-                        print(e)
-                        print("Could not retrieve address!")
+                    self.Output.addItem(f"Current IP: {ip}")
                 elif self.Input.text() == "clear":
                     self.Output.clear()
                     self.Input.clear()
