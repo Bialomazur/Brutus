@@ -22,7 +22,8 @@ It's efficient and enables the script to receive output from infected devices
 and send input/commands to them **at the same time**.
 
 The Commands currently available to the attacker are:
-
+<br></br>
+<br></br>
 - **Initiating the webcam feed**
 ```shell  
 > ID@webcam feed 
