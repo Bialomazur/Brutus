@@ -19,7 +19,7 @@ The **PYQT Framework** is used for the creation of the GUI.
 **Asynchronous TCP-Socket connections** are used to transfer data.  
 
 It's efficient and enables the script to receive output from infected devices  
-and send input/commands to them **at the same time**.
+and send input/commands to those devices **at the same time**.
 
 Connected users are given an individual **ID-Number**  
 over which they can be adressed in the CLI.
