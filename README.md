@@ -95,7 +95,15 @@ _Shortcut_
 > ID@take_screenshot
 ```
 
+<br></br>
+- **Close the CLI**
+```shell
+> exit
+```
+<br></br>
 **New Commands will be added in the near future**
+
+**Open to Support, Commits and Suggestions!**
 
 
 
