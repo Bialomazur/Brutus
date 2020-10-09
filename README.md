@@ -27,7 +27,7 @@ over which they can be adressed in the CLI.
 The Commands currently available to the attacker are:
 <br></br>
 <br></br>
-- **Initiating the webcam feed**
+- **Initiate the webcam feed**
 ```shell  
 > ID@webcam feed 
 ```
@@ -41,7 +41,7 @@ esc
 ```
 
 <br></br>
-- **Initiating the audio feed**
+- **Initiate the audio feed**
 ```shell  
 > ID@mic feed 
 ```
@@ -55,13 +55,13 @@ esc
 ```
 
 <br></br>
-- **Clearing the CLI**
+- **Clear the CLI**
 ```shell
 > clear
 ```
 
 <br></br>
-- **Displaying connected devices & their ID, IPv4, location**
+- **Display connected devices & their ID, IPv4, location**
 ```shell
 > show clients
 ```
@@ -72,7 +72,7 @@ _Shortcut_
 
 
 <br></br>
-- **Sending bash commands**
+- **Send bash command**
 ```shell
 > ID@command
 ```
