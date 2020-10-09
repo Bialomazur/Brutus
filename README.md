@@ -92,6 +92,8 @@ _Shortcut_
 > ID@take_screenshot
 ```
 
+**New Commands will be added in the near future**
+
 
 
 
