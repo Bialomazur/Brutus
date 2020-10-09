@@ -1,4 +1,4 @@
-# Brutus 
+# Brutus 🗡️ 
 
 Brutus is a **Botnet**, written entirely in **Python**.
 
