@@ -1,6 +1,6 @@
 # Brutus 🗡️ 
 
-Brutus is a **Botnet**, written entirely in **Python** and targeting **Windows machines**.
+Brutus is a **Botnet**, written entirely in **Python** targeting **Windows machines**.
 
 It gives the attacker power over the victim's machine and enables him to:
 
