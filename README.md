@@ -21,6 +21,9 @@ The **PYQT Framework** is used for the creation of the GUI.
 It's efficient and enables the script to receive output from infected devices  
 and send input/commands to them **at the same time**.
 
+Connected users are given an individual **ID-Number**  
+over which they can be adressed in the CLI.
+
 The Commands currently available to the attacker are:
 <br></br>
 <br></br>
