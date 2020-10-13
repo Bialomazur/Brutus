@@ -33,9 +33,9 @@ In order to use it **outside** of your **network** you need to setup **port-forw
 ____
 ### Folder structure
 
-Make sure that **'brutus.py'**, **'mic_client.py'** and **'camera_client.py'** are in the **same folder**
+Make sure that **'brutus.py'**, **'microphone-client.py'** and **'webcam-client.py'** are in the **same folder**
 
-Make sure that **'shell.py'**, **'mic_host.py'** and **'camera_host.py'** are in the **same folder**
+Make sure that **'shell.py'**, **'microphone-host.py'** and **'webcam-host.py'** are in the **same folder**
 ____
 ### Performing the attack
 
