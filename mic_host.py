@@ -9,7 +9,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 4096
-HOST = "192.168.2.100"
+HOST = socket.gethostname()
 PORT = 8082
 
 streaming = True

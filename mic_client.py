@@ -9,7 +9,7 @@ RATE = 44100
 CHUNK = 4096
 
 #HOST = "192.168.2.100"
-HOST = "80.142.80.200"
+HOST = socket.gethostname()
 PORT = 8082
 
 audio = pyaudio.PyAudio()

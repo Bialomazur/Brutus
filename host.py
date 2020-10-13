@@ -21,7 +21,7 @@ import json
 
 window = None
 video_thread = None
-HOST = "192.168.2.100"
+HOST = socket.gethostname()
 PORT = 8080
 
 
@@ -59,8 +59,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
             print("Could not retrieve address!")
 
         
-
-
     def get_command(self):
         global video_thread, ip
         def on_press(key):

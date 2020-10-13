@@ -101,9 +101,14 @@ _Shortcut_
 > exit
 ```
 <br></br>
+
+
+
 **New Commands will be added in the near future**
 
 **Open to Support, Commits and Suggestions!**
+
+
 
 
 

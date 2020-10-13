@@ -6,11 +6,11 @@ import pickle
 import struct
 import os
 import threading
+import sys
 
 os.system("title client")
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#HOST = "192.168.2.100"
-HOST = "80.142.80.200"
+HOST = socket.gethostname()
 PORT = 8081
 streaming = True
 s.connect((HOST, PORT))

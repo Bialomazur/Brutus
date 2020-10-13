@@ -11,7 +11,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 streaming = True
 break_streaming = False
-HOST = "192.168.2.100"
+HOST = socket.gethostname()
 PORT = 8081
 
 s.bind((HOST, PORT))
