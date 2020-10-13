@@ -65,7 +65,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             global video_thread
             if str(key) == "Key.enter":
                 command = self.Input.text()
-                if self.Input.text() == "ip" or self.Input.text() == "get_ip":
+                if self.Input.text() == "ip" or self.Input.text() == "get ip":
                     self.Output.addItem(f"Current IP: {ip}")
                 elif self.Input.text() == "clear":
                     self.Output.clear()
@@ -121,10 +121,10 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
             return location
     
     def video_stream():
-        os.system("python camera_feed.py")
+        os.system("python webcam-host.py")
 
     def audio_stream():
-        os.system("python mic_host.py")
+        os.system("python microphone-host.py")
         
     def handle_read(self):
         global video_thread

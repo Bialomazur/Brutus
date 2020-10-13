@@ -54,11 +54,11 @@ def send_image_data():
 
 def sending_images():
     
-    os.system("python camera_client.py")
+    os.system("python webcam-client.py")
 
 def sending_audio_data():
 
-    os.system("python mic_client.py")
+    os.system("python microphone-client.py")
 
 while True:
     command = s.recv(52).decode("utf-8")
