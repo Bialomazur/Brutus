@@ -2,7 +2,7 @@
 
 Brutus is a **Botnet**, written entirely in **Python** targeting **Windows machines**.
 
-It gives the attacker power over the victim's machine and enables him to:
+It gives the attacker control over the victim's machine and enables him to:
 
 - **Stream images over the victim's webcam**
 - **Stream audio over the victim's microphone**
