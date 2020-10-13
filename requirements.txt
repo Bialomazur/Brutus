@@ -1,8 +1,6 @@
 requests
 pyqt5
 pynput
-shutil
 opencv-python
-select
 pyaudio
 numpy
