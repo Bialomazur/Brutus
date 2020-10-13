@@ -24,9 +24,9 @@ and send input/commands to those devices **at the same time**.
 Connected users are given an individual **ID-Number**  
 over which they can be adressed in the CLI.
 
-The Commands currently available to the attacker are:
 <br></br>
-<br></br>
+## Commands
+
 - **Initiate the webcam feed**
 ```shell  
 > ID@webcam feed 
@@ -107,13 +107,6 @@ _Shortcut_
 **New Commands will be added in the near future**
 
 **Open to Support, Commits and Suggestions!**
-
-
-
-
-
-
-
 
 
 
