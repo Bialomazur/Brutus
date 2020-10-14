@@ -28,7 +28,7 @@ ___
 
 **Replace** all **HOST-variables** with your **IPv4** address
 
-In order to use it **outside** of your **network** you need to setup **port-forwarding** on your Router & set **HOST** to **"0.0.0.0"** in **'shell.py'**
+In order to use it **outside** of your **network** you need to setup **port-forwarding** on your Router & set **HOST** to **"0.0.0.0"** in **attacker scripts**.
 
 ____
 ### Folder structure
