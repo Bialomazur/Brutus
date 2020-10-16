@@ -61,7 +61,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print("Could not retrieve address!")
 
-        
+    
+    """GUI method for retrieving commands"""
+
     def get_command(self):
         global video_thread, ip
 
@@ -70,23 +72,23 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
             if str(key) == "Key.enter":
                 command = self.Input.text()
-                if self.Input.text() == "ip" or self.Input.text() == "get ip":
+                if command == "ip" or command == "get ip":
                     self.Output.addItem(f"Current IP: {ip}")
-                elif self.Input.text() == "clear":
+                elif command == "clear":
                     self.Output.clear()
                     self.Input.clear()
                     self.Output.addItem(f"{VERSION} \t\t\t\t\t          {ip}")
-                elif self.Input.text() == "quit" or self.Input.text() == "exit":
+                elif command == "quit" or command == "exit":
                     self.hide()
                 elif command.split(" ")[0] == "echo":
                     output_text = " ".join(command.split(" ")[1:])
                     self.Output.addItem(output_text)
                     self.Input.clear()
-                elif self.Input.text() == "show_clients" or self.Input.text() == "show clients" or self.Input.text() == "sc":
+                elif command == "show_clients" or command == "show clients" or command == "sc":
                     active_connections = "\n".join(f"{key}\t\t{connections[key].addr}\t\t{locator.get_location(connections[key].addr[0])}" for key in connections.keys())
                     self.Output.addItem(f"\nID\t\t       Address\t\t\t   Location\n\n{active_connections}")
                     self.Input.clear()
-                elif "@" in self.Input.text():  
+                elif "@" in command:  
 
                     try:
                         print(connections)
