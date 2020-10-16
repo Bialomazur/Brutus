@@ -8,6 +8,10 @@ CHANNELS = 1
 RATE = 44100
 CHUNK = 4096
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1beee99eca7f583c7d6c6d3eb077b9cb6cdda322
 HOST = socket.gethostname()
 PORT = 8082
 
