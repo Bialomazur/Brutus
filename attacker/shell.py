@@ -127,8 +127,12 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
             data = self.recv(809600)
             image_name = f"Screenshot_ID{self.id}_NUM{self.screenshot_number}.png"
 
-            with open(image_name, "wb") as file:
+            if not f"screenshots{self.id}" in os.listdir():
+                os.mkdir(f"screenshots{self.id}")
+
+            with open(f"screenshots{self.id}/{image_name}", "wb") as file:
                 file.write(data)
+            
                 
             self.screenshot_number += 1
             saved_image_path = os.path.join(CURRENT_FOLDER, image_name)

