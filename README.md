@@ -92,7 +92,13 @@ _Shortcut_
 <br></br>
 - **Take Screenshot of the victim's screen**
 ```shell
-> ID@take_screenshot
+> ID@take screenshot
+```
+
+<br></br>
+- **Take Snapshot of the victim's webcam**
+```shell
+> ID@take snapshot 
 ```
 
 <br></br>
