@@ -112,14 +112,16 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
 class ConnectionHandler(asyncore.dispatcher_with_send):
 
-    receiving_image = False
+    receiving_screenshot = False
     receiving_livefeed = False
+    receiving_snapshot = False
 
     def __init__(self, sock, window, iD):
         asyncore.dispatcher_with_send.__init__(self, sock)
         self.window = window
         self.id = iD
         self.screenshot_number = 1
+        self.snapshot_number = 1
     
     def video_stream():
         os.system("python webcam-host.py")
@@ -129,9 +131,25 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
         
     def handle_read(self):
         global video_thread
+
+
+        if ConnectionHandler.receiving_snapshot:
+            data = self.recv(609600)
+            image_name = f"snapshot_NUM{self.snapshot_number}.png"
+
+            if not f"webcam{self.id}" in os.listdir():
+                os.mkdir(f"webcam{self.id}")
+
+            with open(f"webcam{self.id}/{image_name}", "wb") as file:
+                file.write(data)
+
+            self.snapshot_number += 1
+            saved_image_path = os.path.join(CURRENT_FOLDER, image_name)
+            self.window.Output.addItem(f"\n{time.strftime('%H:%M:%S')} Snapshot saved to: {saved_image_path}")
+            ConnectionHandler.receiving_snapshot = False
         
-        if ConnectionHandler.receiving_image:
-            data = self.recv(809600)
+        elif ConnectionHandler.receiving_screenshot:
+            data = self.recv(609600)
             image_name = f"Screenshot_ID{self.id}_NUM{self.screenshot_number}.png"
 
             if not f"screenshots{self.id}" in os.listdir():
@@ -139,17 +157,18 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
 
             with open(f"screenshots{self.id}/{image_name}", "wb") as file:
                 file.write(data)
-            
-                
+        
             self.screenshot_number += 1
             saved_image_path = os.path.join(CURRENT_FOLDER, image_name)
             self.window.Output.addItem(f"\n{time.strftime('%H:%M:%S')} Screenshot saved to: {saved_image_path}")
-            ConnectionHandler.receiving_image = False
+            ConnectionHandler.receiving_screenshot = False
+       
         else:
-            data = self.recv(4096).decode("Cp1252")
-
+            data = self.recv(8096).decode("Cp1252")
             if data == "Taken Screenshot":
-                ConnectionHandler.receiving_image = True
+                ConnectionHandler.receiving_screenshot = True
+            if data == "Taken Snapshot":
+                ConnectionHandler.receiving_snapshot = True
             elif data == "STARTING LIVESTREAM":
                 video_thread = threading.Thread(target=ConnectionHandler.video_stream)
                 video_thread.start()

