@@ -35,7 +35,7 @@ ____
 
 Make sure that **'brutus.py'**, **'microphone-client.py'** and **'webcam-client.py'** are in the **same folder**
 
-Make sure that **'shell.py'**, **'microphone-host.py'** and **'webcam-host.py'** are in the **same folder**
+Make sure that **'shell.py'**, **'locator.py'**, **'microphone-host.py'** and **'webcam-host.py'** are in the **same folder**
 ____
 ### Performing the attack
 
