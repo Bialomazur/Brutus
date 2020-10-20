@@ -13,13 +13,13 @@ ___
 Open up a **terminal** in the **Brutus-folder** and run the following command:**
 
 ```shell
-$ pip install -m requirements.txt
+$ pip install -r requirements.txt
 ```
 
 **Or if you should have installed Python3 & Python2:**
 
 ```shell
-$ pip3 install -m requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 ___
