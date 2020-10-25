@@ -7,7 +7,7 @@ It gives the attacker control over the victim's machine and enables him to:
 - **Stream images over the victim's webcam**
 - **Stream audio over the victim's microphone**
 - **Take screenshots of the victim's desktop**
-- **Run bash commands & receive the output of those**
+- **Run batch commands & receive the output of those**
 - **Automatically create a backdoor after execution**
 - **Get the victim's location through the IPv4 address**
 
