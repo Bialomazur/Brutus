@@ -43,3 +43,5 @@ Open up **'shell.py'**
 
 Run **'brutus.py'** on the **victim's machine**
 ___
+
+##! If issues should arise, do not hesitate to contact me 
