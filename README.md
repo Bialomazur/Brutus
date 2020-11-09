@@ -102,6 +102,12 @@ _Shortcut_
 ```
 
 <br></br>
+- **Show popup-message on victim's machine**
+```shell
+> ID@popup 'window title' 'message' 
+```
+
+<br></br>
 - **Close the CLI**
 ```shell
 > exit
