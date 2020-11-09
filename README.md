@@ -102,7 +102,7 @@ _Shortcut_
 ```
 
 <br></br>
-- **Show popup-message on victim's machine**
+- **Show popup message on victim's machine**
 ```shell
 > ID@popup 'window title' 'message' 
 ```
