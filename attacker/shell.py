@@ -1,12 +1,11 @@
 import socket
 import sys
 import os
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.uic import loadUi
-from pynput.keyboard import Key, Listener, Controller
+from pynput.keyboard import Listener, Controller
 import asyncore
-import cv2
 import threading
 import requests
 import json
@@ -30,48 +29,7 @@ video_thread = None
 
 
 
-def _cmd_show_header(window):
-    window.Output.clear()
-    window.Input.clear()
-    window.Output.addItem(HEADER_TEMPLATE.format(version=VERSION, ip=ip))
-
-def _cmd_show_clients(window, command):
-    # Build client listing using the row template
-    active_connections = "\n".join(
-        CLIENT_ROW_TEMPLATE.format(
-            id=key,
-            addr=connections[key].addr,
-            location=locator.get_location(connections[key].addr[0])
-        )
-        for key in connections.keys()
-    ) if connections else ""
-    window.Output.addItem(f"{CLIENT_HEADER}{active_connections}")
-    window.Input.clear()
-
-def _cmd_echo(window, command):
-    output_text = " ".join(command.split(" ")[1:])
-    window.Output.addItem(output_text)
-    window.Input.clear()
-
-def _cmd_quit(window, command):
-    window.hide()
-
-def _cmd_ip(window, command):
-    window.Output.addItem(IP_TEMPLATE.format(ip=ip))
-
-def _cmd_send_at(window, command):
-    try:
-        receiver_id = int(command.split("@")[0])
-        payload = command.split("@", 1)[1]
-        receiver = connections[receiver_id]
-        receiver.send(payload.encode("utf-8"))
-        window.Input.clear()
-    except Exception:
-        window.Output.addItem(ERROR_CLIENT_NOT_FOUND)
-
-
-
-""" PYQT5 GUI Class """‚
+""" PYQT5 GUI Class """
 class MyMainWindow(QtWidgets.QMainWindow):
     
     def __init__(self):
@@ -89,12 +47,21 @@ class MyMainWindow(QtWidgets.QMainWindow):
             content = json.loads(content)
             ip_address = content["ip"]
             ip = ip_address
-            self.Output.clear()
-            self.Output.addItem(HEADER_TEMPLATE.format(version=VERSION, ip=ip))
         except Exception as e:
+            # English-only comment: log failure to retrieve public IP and continue
             print("Could not retrieve Users IP!")
 
-    
+        # Prepare context for command handlers and render header using Command objects
+        context = {
+            "connections": connections,
+            "ip": ip,
+            "locator": locator,
+            "version": VERSION,
+        }
+        # Use the OO command subsystem to show the header (delegates clearing and printing)
+        Command.dispatch("clear", self, context)
+
+
     """ GUI method for retrieving commands """
 
     def get_command(self):
@@ -232,20 +199,29 @@ class Server(asyncore.dispatcher):
   
 def show_window():
     global window
+    # English-only comment: create the QApplication and window in the main thread.
+    # Start the command input listener as a background daemon thread.
+    # Create the Server instance (binds sockets) and run asyncore.loop in its own daemon thread.
     print("Showing window...")
     application = QtWidgets.QApplication(sys.argv)
     window = MyMainWindow()
-    threading.Thread(target=window.get_command).start()
+    threading.Thread(target=window.get_command, daemon=True).start()
+
+    try:
+        server = Server(HOST, PORT, window)
+        print("Server running!")
+        threading.Thread(target=asyncore.loop, daemon=True).start()
+    except Exception as e:
+        # English-only comment: log server startup failure but continue to run the UI
+        print(f"Failed to start server: {e}")
+
     window.show()
     sys.exit(application.exec_())
 
 
 def main():
-    threading.Thread(target=show_window).start()
-    time.sleep(2)
-    server = Server(HOST, PORT, window)
-    print("Server running!")
-    asyncore.loop()
+    # English-only comment: run the GUI in the main thread (required on macOS).
+    show_window()
 
 if __name__ == "__main__":
     main()
