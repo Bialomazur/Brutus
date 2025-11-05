@@ -1,5 +1,8 @@
 import time
 
+# Add shared VERSION constant so all modules import the same value.
+VERSION = "BRUTUS V. 1.0 Beta"
+
 # String templates and helpers to avoid inconsistent inline formatting
 HEADER_TEMPLATE = "{version:<40}{ip}"
 CLIENT_HEADER = "ID\t\t       Address\t\t\t   Location\n\n"

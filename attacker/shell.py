@@ -11,7 +11,6 @@ import Command
 from attacker.util import *
 
 """ constants """
-VERSION = "BRUTUS V. 1.0 Beta"
 CURRENT_FOLDER = os.path.dirname(os.path.realpath(__file__))
 HOST = socket.gethostname()
 PORT = 8080
