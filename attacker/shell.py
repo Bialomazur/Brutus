@@ -1,19 +1,12 @@
-import asyncio
 import socket
-import time
 import sys
 import os
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.uic import loadUi
 from pynput.keyboard import Key, Listener, Controller
-import threading
 import asyncore
-import multiprocessing
-import struct
-import pickle
 import cv2
-from multiprocessing import Process
 import threading
 import requests
 import json
