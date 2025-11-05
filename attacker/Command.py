@@ -1,19 +1,4 @@
-import os
-import time
-
-# String templates and helpers for consistent output formatting
-HEADER_TEMPLATE = "{version:<40}{ip}"
-CLIENT_HEADER = "ID\t\t       Address\t\t\t   Location\n\n"
-CLIENT_ROW_TEMPLATE = "{id}\t\t{addr}\t\t{location}"
-IP_TEMPLATE = "Current IP: {ip}"
-ERROR_CLIENT_NOT_FOUND = "[ ! ] ERROR Client not found."
-TIME_FMT = "%H:%M:%S"
-
-
-def ts():
-    """Return current timestamp string according to TIME_FMT."""
-    return time.strftime(TIME_FMT)
-
+from attacker.util import *
 
 class Command:
     """Base command interface: implement execute(window, command, context)."""

