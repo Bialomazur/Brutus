@@ -4,7 +4,6 @@ import select
 from pynput.keyboard import Key, Listener, Controller
 import threading
 
-
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100

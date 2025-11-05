@@ -17,6 +17,9 @@ SNAPSHOT_SAVED_TEMPLATE = "\n{time} Snapshot saved to: {path}"
 SCREENSHOT_SAVED_TEMPLATE = "\n{time} Screenshot saved to: {path}"
 TIME_FMT = "%H:%M:%S"
 
+# Message shown when there are no connected clients
+NO_CLIENTS_TEMPLATE = "No connected client found."
+
 
 def ts():
     """Return current timestamp string according to TIME_FMT."""
