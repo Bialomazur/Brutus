@@ -1,13 +1,10 @@
 import socket 
 import os 
-import sys
 import subprocess
-import shutil
 import time
 import cv2
 import pickle
 import struct
-from multiprocessing import Process
 import threading
 import pyautogui
 import ctypes
