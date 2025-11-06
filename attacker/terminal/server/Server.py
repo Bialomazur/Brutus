@@ -1,5 +1,5 @@
 import asyncore
-from attacker.terminal.ConnectionHandler import ConnectionHandler
+from attacker.terminal.server.ConnectionHandler import ConnectionHandler
 from attacker.util import ts, CONN_CONNECT_TEMPLATE
 
 class Server(asyncore.dispatcher):

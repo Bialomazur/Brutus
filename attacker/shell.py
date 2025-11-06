@@ -7,7 +7,7 @@ import json
 
 from attacker.services import locator
 from attacker.terminal.command.Command import dispatch as command_dispatch
-from attacker.terminal.Server import Server
+from attacker.terminal.server.Server import Server
 from attacker.terminal.Terminal import TerminalWindow
 
 from attacker.util import *
