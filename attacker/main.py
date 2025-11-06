@@ -1,16 +1,13 @@
 import socket
-import sys
 import os
 import threading
 import asyncore
 import requests
 import json
 
-import locator
-# use dispatch directly from the terminal Command module
-from attacker.terminal.Command import dispatch as command_dispatch
-# import Server and TerminalWindow from the terminal package
-from attacker.terminal.Server import Server
+from attacker.service import LocatorService
+from attacker.terminal.command.Command import dispatch as command_dispatch
+from attacker.terminal.server.Server import Server
 from attacker.terminal.Terminal import TerminalWindow
 
 from attacker.util import *
