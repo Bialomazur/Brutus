@@ -1,0 +1,39 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyc
+*$py.class
+
+# Testing, coverage and caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Build / packaging artifacts
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.iml
+
+# macOS / Windows OS files
+.DS_Store
+Thumbs.db
+
+# Environment / secret files
+.env
+.env.local
+secrets.json
+
+# Logs and misc
+*.log
