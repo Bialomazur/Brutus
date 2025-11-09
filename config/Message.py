@@ -1,8 +1,6 @@
 from enum import Enum
 
 
-"""General confuguration settings used on both ends."""
-
 class Message(Enum):
     # existing/general commands (kept/extended)
     SHOW_HEADER = "show_header"
