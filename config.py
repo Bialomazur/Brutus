@@ -3,7 +3,7 @@ from enum import Enum
 
 """General confuguration settings used on both ends."""
 
-class MagicString(Enum):
+class Message(Enum):
     # existing/general commands (kept/extended)
     SHOW_HEADER = "show_header"
     SHOW_CLIENTS = "show_clients"

