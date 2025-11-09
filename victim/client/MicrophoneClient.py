@@ -1,6 +1,6 @@
 import pyaudio
 import time
-from Client import Client
+from TCPClient import TCPClient
 
 
 FORMAT = pyaudio.paInt16
@@ -12,7 +12,7 @@ HOST = __import__("socket").gethostname()
 PORT = 8082
 
 
-class MicrophoneClient(Client):
+class MicrophoneTCPClient(TCPClient):
     """Microphone client that streams captured audio to a remote server."""
 
     def __init__(self, host: str, port: int):
@@ -64,11 +64,3 @@ class MicrophoneClient(Client):
             except Exception:
                 pass
             self.close()
-
-
-if __name__ == "__main__":
-    mc = MicrophoneClient(HOST, PORT)
-    try:
-        mc.run()
-    except KeyboardInterrupt:
-        mc.close()
