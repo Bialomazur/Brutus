@@ -52,11 +52,11 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
             self.close()
         finally:
             self._connections.pop(self.id, None)
-            self.window.Output.addItem(CONN_DISCONNECT_TEMPLATE.format(time=ts(), addr=self.addr))
+            self.window.Output.addItem(CONNECTION_DISCONNECT_TEMPLATE.format(time=ts(), addr=self.addr))
 
     def handle_expt(self):
         try:
             self.close()
         finally:
             self._connections.pop(self.id, None)
-            self.window.Output.addItem(CONN_LOST_TEMPLATE.format(time=ts(), addr=self.addr))
+            self.window.Output.addItem(CONNECTION_LOST_TEMPLATE.format(time=ts(), addr=self.addr))

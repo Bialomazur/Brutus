@@ -1,6 +1,6 @@
 import asyncore
 from attacker.terminal.server.ConnectionHandler import ConnectionHandler
-from attacker.util import ts, CONN_CONNECT_TEMPLATE
+from attacker.util import ts, CONNECTION_CONNECT_TEMPLATE
 
 class Server(asyncore.dispatcher):
 
@@ -16,8 +16,7 @@ class Server(asyncore.dispatcher):
         self.listen(5)
 
     def handle_accepted(self, sock, addr):
-        self.window.Output.addItem(CONN_CONNECT_TEMPLATE.format(time=ts(), addr=addr))
+        self.window.Output.addItem(CONNECTION_CONNECT_TEMPLATE.format(time=ts(), addr=addr))
         Server.client_number += 1
         connection = ConnectionHandler(sock, addr, self.window, Server.client_number, self._connections)
         self._connections[Server.client_number] = connection
-
