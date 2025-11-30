@@ -4,7 +4,7 @@ import time
 from typing import Optional
 
 
-class Client:
+class TCPClient:
     # Default send/recv chunk size
     DEFAULT_CHUNK = 4096
 

@@ -1,124 +1,47 @@
-# Brutus 🗡️ 
+# Configuration
 
-Brutus is a **Botnet**, written entirely in **Python** targeting **Windows machines**.
+___
 
-It gives the attacker control over the victim's machine and enables him to:
+### Version
 
-- **Stream images over the victim's webcam**
-- **Stream audio over the victim's microphone**
-- **Take screenshots of the victim's desktop**
-- **Run batch commands & receive the output of those**
-- **Automatically create a backdoor after execution**
-- **Get the victim's location through the IPv4 address**
+Make sure that you are using **Python3**
 
-The **Command Line Interface / CLI** of Brutus had to be developed **manually**   
-because in Python the **"input()" - function** disables the script from  
-**printing output** to the **regular CLI** when awaiting user input.
+___
 
-The **PYQT Framework** is used for the creation of the GUI.   
-**Asynchronous TCP-Socket connections** are used to transfer data.  
+### Modules
 
-It's efficient and enables the script to receive output from infected devices  
-and send input/commands to those devices **at the same time**.
+Open up a **terminal** in the **Brutus-folder** and run the following command:**
 
-Connected users are given an individual **ID-Number**  
-over which they can be adressed in the CLI.
-
-<br></br>
-## Commands
-
-- **Initiate the webcam feed**
-```shell  
-> ID@webcam feed 
-```
-_Shortcut_
 ```shell
-> ID@wf 
-``` 
-_Can be ended via_
-```shell
-esc
+$ pip install -r requirements.txt
 ```
 
-<br></br>
-- **Initiate the audio feed**
-```shell  
-> ID@mic feed 
-```
-_Shortcut_
+**Or if you should have installed Python3 & Python2:**
+
 ```shell
-> ID@mf
-``` 
-_Can be ended via_
-```shell
-esc
+$ pip3 install -r requirements.txt
 ```
 
-<br></br>
-- **Clear the CLI**
-```shell
-> clear
-```
+___
 
-<br></br>
-- **Display connected devices & their ID, IPv4, location**
-```shell
-> show clients
-```
-_Shortcut_
-```shell
-> sc
-```
+### IP address
 
+**Replace** all **HOST-variables** with your **IPv4** address
 
-<br></br>
-- **Send bash command**
-```shell
-> ID@command
-```
+In order to use it **outside** of your **network** you need to setup **port-forwarding** on your Router & set **HOST** to **"0.0.0.0"** in all **attacker scripts**.
 
-<br></br>
-- **Get current IPv4**
-```shell
-> get_ip
-```
+____
+### Folder structure
 
-<br></br>
-- **Print text to the Command Line**
-```shell
-> echo ...
-```
+Make sure that **'brutus.py'**, **'microphone-client.py'** and **'webcam-client.py'** are in the **same folder**
 
-<br></br>
-- **Take Screenshot of the victim's screen**
-```shell
-> ID@take screenshot
-```
+Make sure that **'shell.py'**, **'locator.py'**, **'microphone-host.py'** and **'webcam-host.py'** are in the **same folder**
+____
+### Performing the attack
 
-<br></br>
-- **Take Snapshot of the victim's webcam**
-```shell
-> ID@take snapshot 
-```
+Open up **'shell.py'**
 
-<br></br>
-- **Show popup message on victim's machine**
-```shell
-> ID@popup 'window title' 'message' 
-```
+Run **'brutus.py'** on the **victim's machine**
+___
 
-<br></br>
-- **Close the CLI**
-```shell
-> exit
-```
-<br></br>
-
-
-
-**New Commands will be added in the near future**
-
-**Open to Support, Commits and Suggestions!**
-
-
-
+##! If issues should arise, do not hesitate to contact me 

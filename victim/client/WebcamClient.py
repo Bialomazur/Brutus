@@ -3,14 +3,14 @@ import pickle
 import struct
 import sys
 import time
-from Client import Client
+from TCPClient import TCPClient
 
 HOST = __import__("socket").gethostname()
 PORT = 8081
 RECV_CHUNK = 4096
 
 
-class WebcamClient(Client):
+class WebcamTCPClient(TCPClient):
     """Webcam client that captures frames and streams them to a remote server."""
 
     def __init__(self, host: str, port: int):
@@ -55,7 +55,7 @@ class WebcamClient(Client):
 
 
 if __name__ == "__main__":
-    wc = WebcamClient(HOST, PORT)
+    wc = WebcamTCPClient(HOST, PORT)
     try:
         wc.run()
     except KeyboardInterrupt:
