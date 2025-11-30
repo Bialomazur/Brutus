@@ -1,6 +1,8 @@
+from abc import ABC
+
 from attacker.util import *
 
-class Command:
+class Command(ABC):
     """Base command interface: implement execute(window, command, context)."""
     def execute(self, window, command: str, context: dict):
         raise NotImplementedError

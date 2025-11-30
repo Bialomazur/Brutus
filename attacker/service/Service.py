@@ -1,9 +1,10 @@
 import socket
 import threading
+from abc import ABC
 from typing import Optional
 
 
-class Service:
+class Service(ABC):
     """Base class for network-backed services that accept one connection and run in a background thread."""
 
     def __init__(self, host: str, port: int, backlog: int = 1, reuse_addr: bool = True) -> None:
