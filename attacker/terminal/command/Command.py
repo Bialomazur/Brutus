@@ -1,6 +1,13 @@
 from abc import ABC
 
 from attacker.util import *
+from attacker.terminal.command.ShowHeaderCommand import ShowHeaderCommand
+from attacker.terminal.command.ShowClientsCommand import ShowClientsCommand
+from attacker.terminal.command.EchoCommand import EchoCommand
+from attacker.terminal.command.QuitCommand import QuitCommand
+from attacker.terminal.command.IPCommand import IPCommand
+from attacker.terminal.command.SendAtCommand import SendAtCommand
+
 
 class Command(ABC):
     """Base command interface: implement execute(window, command, context)."""
@@ -8,71 +15,7 @@ class Command(ABC):
         raise NotImplementedError
 
 
-class ShowHeaderCommand(Command):
-    def execute(self, window, command: str, context: dict):
-        window.Output.clear()
-        window.Input.clear()
-        version = context.get("version", "")
-        ip = context.get("ip", "")
-        window.Output.addItem(HEADER_TEMPLATE.format(version=version, ip=ip))
-
-
-class ShowClientsCommand(Command):
-    def execute(self, window, command: str, context: dict):
-        connections = context.get("connections", {})
-        locator = context.get("locator")
-        # If no clients connected, print a friendly message instead of an empty table
-        if not connections:
-            window.Output.addItem(NO_CLIENTS_TEMPLATE)
-            window.Input.clear()
-            return
-
-        active_connections = "\n".join(
-            CLIENT_ROW_TEMPLATE.format(
-                id=key,
-                addr=connections[key].addr,
-                location=locator.get_location(connections[key].addr[0])
-            )
-            for key in connections.keys()
-        )
-        window.Output.addItem(f"{CLIENT_HEADER}{active_connections}")
-        window.Input.clear()
-
-
-class EchoCommand(Command):
-    def execute(self, window, command: str, context: dict):
-        parts = command.split(" ", 1)
-        output_text = parts[1] if len(parts) > 1 else ""
-        window.Output.addItem(output_text)
-        window.Input.clear()
-
-
-class QuitCommand(Command):
-    def execute(self, window, command: str, context: dict):
-        window.hide()
-
-
-class IPCommand(Command):
-    def execute(self, window, command: str, context: dict):
-        ip = context.get("ip", "")
-        window.Output.addItem(IP_TEMPLATE.format(ip=ip))
-
-
-class SendAtCommand(Command):
-    """Expect pattern '<id>@<payload>' and send payload to that connection."""
-    def execute(self, window, command: str, context: dict):
-        connections = context.get("connections", {})
-        try:
-            receiver_id = int(command.split("@")[0])
-            payload = command.split("@", 1)[1]
-            receiver = connections[receiver_id]
-            receiver.send(payload.encode("utf-8"))
-            window.Input.clear()
-        except Exception:
-            window.Output.addItem(ERROR_CLIENT_NOT_FOUND)
-
-
-COMMAND = {
+COMMANDS = {
     "ip": IPCommand(),
     "clear": ShowHeaderCommand(),
     "quit": QuitCommand(),
