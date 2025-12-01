@@ -1,4 +1,4 @@
-from attacker.service.Service import Service
+from src.attacker.service.Service import Service
 import cv2
 import struct
 import pickle

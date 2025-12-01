@@ -1,12 +1,11 @@
 from abc import ABC
 
-from attacker.util import *
-from attacker.terminal.command.ShowHeaderCommand import ShowHeaderCommand
-from attacker.terminal.command.ShowClientsCommand import ShowClientsCommand
-from attacker.terminal.command.EchoCommand import EchoCommand
-from attacker.terminal.command.QuitCommand import QuitCommand
-from attacker.terminal.command.IPCommand import IPCommand
-from attacker.terminal.command.SendAtCommand import SendAtCommand
+from src.attacker.terminal.command.ShowHeaderCommand import ShowHeaderCommand
+from src.attacker.terminal.command.ShowClientsCommand import ShowClientsCommand
+from src.attacker.terminal.command.EchoCommand import EchoCommand
+from src.attacker.terminal.command.QuitCommand import QuitCommand
+from src.attacker.terminal.command.IPCommand import IPCommand
+from src.attacker.terminal.command.SendAtCommand import SendAtCommand
 
 
 class Command(ABC):

@@ -5,12 +5,9 @@ import asyncore
 import requests
 import json
 
-from attacker.service import LocatorService
-from attacker.terminal.command.Command import dispatch as command_dispatch
-from attacker.terminal.server.Server import Server
-from attacker.terminal.Terminal import Terminal
-
-from attacker.util import *
+from src.attacker.terminal.command.Command import dispatch as command_dispatch
+from src.attacker.terminal.server.Server import Server
+from src.attacker.terminal.Terminal import Terminal
 
 """ constants """
 CURRENT_FOLDER = os.path.dirname(os.path.realpath(__file__))
