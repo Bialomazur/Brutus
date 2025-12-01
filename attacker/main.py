@@ -8,7 +8,7 @@ import json
 from attacker.service import LocatorService
 from attacker.terminal.command.Command import dispatch as command_dispatch
 from attacker.terminal.server.Server import Server
-from attacker.terminal.Terminal import TerminalWindow
+from attacker.terminal.Terminal import Terminal
 
 from attacker.util import *
 
@@ -36,7 +36,7 @@ def start_server_in_background(window):
 
 def main():
     global ip, window
-    window = TerminalWindow()
+    window = Terminal()
 
     # try to obtain public IP; non-fatal
     try:

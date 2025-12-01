@@ -1,6 +1,6 @@
 import sys
 
-class TerminalWindow:
+class Terminal:
     class OutputList:
         def addItem(self, text: str):
             print(text)
@@ -16,8 +16,8 @@ class TerminalWindow:
             pass
 
     def __init__(self):
-        self.Output = TerminalWindow.OutputList()
-        self.Input = TerminalWindow.InputHelper()
+        self.Output = Terminal.OutputList()
+        self.Input = Terminal.InputHelper()
 
     def hide(self):
         print("Exiting...")
