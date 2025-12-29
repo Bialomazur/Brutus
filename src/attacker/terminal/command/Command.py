@@ -13,6 +13,15 @@ class Command(ABC):
     def execute(self, window, command: str, context: dict):
         raise NotImplementedError
 
+    def __str__(self):
+        return self.__class__.__name__
+
+    def __repr__(self):
+        return f"<Command: {self.__class__.__name__}>"
+
+    def __len__(self):
+        return 1
+
 
 COMMANDS = {
     "ip": IPCommand(),
