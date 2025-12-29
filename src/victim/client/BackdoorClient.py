@@ -1,4 +1,4 @@
-from victim.client.TCPClient import TCPClient
+from src.victim.client.TCPClient import TCPClient
 
 
 class BackdoorClient(TCPClient):

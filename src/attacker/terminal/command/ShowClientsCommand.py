@@ -1,5 +1,4 @@
-from attacker.util import *
-from attacker.terminal.command.Command import Command
+from src.attacker.terminal.command.Command import Command
 
 
 class ShowClientsCommand(Command):

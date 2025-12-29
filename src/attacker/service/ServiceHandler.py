@@ -1,6 +1,6 @@
 from abc import ABC
 
-from attacker.service.Service import Service
+from src.attacker.service.Service import Service
 
 
 class ServiceHandler(ABC):

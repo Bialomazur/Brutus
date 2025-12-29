@@ -1,6 +1,6 @@
 import asyncore
-from attacker.terminal.server.ConnectionHandler import ConnectionHandler
-from attacker.util import ts, CONNECTION_CONNECT_TEMPLATE
+from src.attacker.terminal.server.ConnectionHandler import ConnectionHandler
+from src.attacker.util import ts, CONNECTION_CONNECT_TEMPLATE
 
 class Server(asyncore.dispatcher):
 

@@ -12,8 +12,7 @@ import sys
 
 # ensure project root is importable (so we can import config from parent folder)
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from config import Message
-
+from src.config import Message
 
 PATH = os.path.dirname(os.path.realpath(__file__))
 NAME = os.path.basename(__file__)

@@ -1,6 +1,5 @@
-from attacker.service.Service import Service
+from src.attacker.service.Service import Service
 import pyaudio
-import threading
 from pynput.keyboard import Key, Listener
 
 FORMAT = pyaudio.paInt16

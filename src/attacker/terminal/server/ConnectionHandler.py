@@ -1,7 +1,6 @@
 import asyncore
 import os
 import threading
-from attacker.util import *
 
 # point to the project attacker folder (one level up from terminal package)
 CURRENT_FOLDER = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

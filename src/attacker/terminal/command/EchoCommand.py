@@ -1,4 +1,4 @@
-from attacker.terminal.command.Command import Command
+from src.attacker.terminal.command.Command import Command
 
 
 class EchoCommand(Command):

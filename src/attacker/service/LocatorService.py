@@ -1,4 +1,4 @@
-from attacker.service.Service import Service
+from src.attacker.service.Service import Service
 import socket
 import os
 import json
