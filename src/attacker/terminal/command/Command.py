@@ -7,9 +7,24 @@ from src.attacker.terminal.command.QuitCommand import QuitCommand
 from src.attacker.terminal.command.IPCommand import IPCommand
 from src.attacker.terminal.command.SendAtCommand import SendAtCommand
 
+COMMANDS = {
+    "ip": IPCommand(),
+    "clear": ShowHeaderCommand(),
+    "quit": QuitCommand(),
+    "exit": QuitCommand(),
+    "echo ": EchoCommand(),            # prefix: "echo <text>"
+    "show_clients": ShowClientsCommand(),
+    "show clients": ShowClientsCommand(),
+    "sc": ShowClientsCommand(),
+    "@": SendAtCommand(),              # special handler for "<id>@<cmd>"
+}
+
 
 class Command(ABC):
     """Base command interface: implement execute(window, command, context)."""
+    ERROR_MESSSAGE_PREFIX = "[Error] "
+
+
     def execute(self, window, command: str, context: dict):
         raise NotImplementedError
 
@@ -22,18 +37,9 @@ class Command(ABC):
     def __len__(self):
         return 1
 
+    def error (self, window, message: str):
+        window.Output.addItem(f"{self.__class__.ERROR_MESSSAGE_PREFIX} {message}")
 
-COMMANDS = {
-    "ip": IPCommand(),
-    "clear": ShowHeaderCommand(),
-    "quit": QuitCommand(),
-    "exit": QuitCommand(),
-    "echo ": EchoCommand(),            # prefix: "echo <text>"
-    "show_clients": ShowClientsCommand(),
-    "show clients": ShowClientsCommand(),
-    "sc": ShowClientsCommand(),
-    "@": SendAtCommand(),              # special handler for "<id>@<cmd>"
-}
 
 
 def dispatch(command_str: str, window, context: dict) -> bool:
