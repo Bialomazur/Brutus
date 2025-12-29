@@ -52,20 +52,20 @@ def dispatch(command_str: str, window, context: dict) -> bool:
      - Check exact keys.
     """
     if "@" in command_str:
-        handler = COMMAND.get("@")
+        handler = COMMANDS.get("@")
         if handler:
             handler.execute(window, command_str, context)
             return True
 
     # Prefix matches first (e.g. "echo ")
-    for key, handler in COMMAND.items():
+    for key, handler in COMMANDS.items():
         if key.endswith(" "):
             if command_str.startswith(key):
                 handler.execute(window, command_str, context)
                 return True
 
     # Exact matches
-    handler = COMMAND.get(command_str)
+    handler = COMMANDS.get(command_str)
     if handler:
         handler.execute(window, command_str, context)
         return True
