@@ -1,0 +1,21 @@
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+src = ["src"]
+exclude = [
+  ".venv",
+  "venv",
+  "build",
+  "dist",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
