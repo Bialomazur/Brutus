@@ -12,7 +12,7 @@ This repository is for learning and experimentation. Use it only in environments
 From the repository root:
 
 ```shell
-python3 -m pip install -r requirements.txt
+python3 -m pip install -e .
 ```
 
 (Optional) Use a virtual environment:
@@ -20,38 +20,18 @@ python3 -m pip install -r requirements.txt
 ```shell
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
+python -m pip install -e .
 ```
 
 ### Linting and formatting
 
-Install dev tooling:
-
 ```shell
-python3 -m pip install -r requirements-dev.txt
-```
+python3 -m pip install -e ".[dev]"
+ruff check .
+ruff format .
 
-Lint:
-
-```shell
-python3 -m ruff check .
-```
-
-Format:
-
-```shell
-python3 -m ruff format .
-```
-
-(Optional) Enable git pre-commit hooks:
-
-```shell
+# optional
 pre-commit install
-```
-
-Run hooks on all files:
-
-```shell
 pre-commit run --all-files
 ```
 
