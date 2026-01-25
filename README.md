@@ -1,47 +1,42 @@
-# Configuration
+# Brutus
 
-___
+This repository is for learning and experimentation. Use it only in environments you own or have explicit permission to test.
 
-### Version
+## Development
 
-Make sure that you are using **Python3**
+### Requirements
+- Python 3
 
-___
+### Install
 
-### Modules
-
-Open up a **terminal** in the **Brutus-folder** and run the following command:**
-
-```shell
-$ pip install -r requirements.txt
-```
-
-**Or if you should have installed Python3 & Python2:**
+From the repository root:
 
 ```shell
-$ pip3 install -r requirements.txt
+python3 -m pip install -e .
 ```
 
-___
+(Optional) Use a virtual environment:
 
-### IP address
+```shell
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+```
 
-**Replace** all **HOST-variables** with your **IPv4** address
+### Linting and formatting
 
-In order to use it **outside** of your **network** you need to setup **port-forwarding** on your Router & set **HOST** to **"0.0.0.0"** in all **attacker scripts**.
+```shell
+python3 -m pip install -e ".[dev]"
+ruff check .
+ruff format .
 
-____
-### Folder structure
+# optional
+pre-commit install
+pre-commit run --all-files
+```
 
-Make sure that **'brutus.py'**, **'microphone-client.py'** and **'webcam-client.py'** are in the **same folder**
+### Repository layout
+- `src/` contains the Python modules.
 
-Make sure that **'shell.py'**, **'locator.py'**, **'microphone-host.py'** and **'webcam-host.py'** are in the **same folder**
-____
-### Performing the attack
-
-Open up **'shell.py'**
-
-Run **'brutus.py'** on the **victim's machine**
-___
-
-##! If issues should arise, do not hesitate to contact me 
+### Security
+If you believe you’ve found a security issue, see `SECURITY.md`.
