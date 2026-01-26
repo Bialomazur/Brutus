@@ -35,6 +35,14 @@ pre-commit install
 pre-commit run --all-files
 ```
 
+### Sandbox (Docker)
+
+Run a quick "does it work" check in a no-network container:
+
+```shell
+./sandbox.sh check
+```
+
 ### Repository layout
 - `src/` contains the Python modules.
 

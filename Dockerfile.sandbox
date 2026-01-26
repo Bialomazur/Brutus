@@ -1,0 +1,19 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN python -m pip install --upgrade pip \
+ && python -m pip install --no-cache-dir ruff pre-commit
+
+# Copy repo after installing tooling so Docker can cache the layer.
+COPY . .
+
+# Install the project in editable mode without pulling heavy runtime deps.
+RUN python -m pip install -e . --no-deps
+
+ENTRYPOINT ["bash", "-lc"]
+CMD ["python -m unittest -q"]
