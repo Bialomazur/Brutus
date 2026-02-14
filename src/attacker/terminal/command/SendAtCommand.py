@@ -1,4 +1,5 @@
 from src.attacker.terminal.command.Command import Command
+from src.attacker.util import ERROR_CLIENT_NOT_FOUND
 
 
 class SendAtCommand(Command):
