@@ -1,6 +1,6 @@
 from enum import Enum
 
-"""General confuguration settings used on both ends."""
+"""General configuration settings used on both ends."""
 
 
 class Config(Enum):
