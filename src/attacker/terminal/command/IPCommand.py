@@ -1,4 +1,5 @@
 from src.attacker.terminal.command.Command import Command
+from src.attacker.util import IP_TEMPLATE
 
 
 class IPCommand(Command):
