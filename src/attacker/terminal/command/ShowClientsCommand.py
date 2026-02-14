@@ -1,4 +1,5 @@
 from src.attacker.terminal.command.Command import Command
+from src.attacker.util import CLIENT_HEADER, CLIENT_ROW_TEMPLATE, NO_CLIENTS_TEMPLATE
 
 
 class ShowClientsCommand(Command):

