@@ -1,6 +1,6 @@
 import time
 
-# Add shared VERSION constant so all modules import the same value.
+# Version constant
 VERSION = "BRUTUS V. 1.0 Beta"
 
 # String templates and helpers to avoid inconsistent inline formatting
@@ -15,10 +15,8 @@ CONNECTION_DISCONNECT_TEMPLATE = "{time}  Target {addr!r} disconnected from the 
 CONNECTION_LOST_TEMPLATE = "{time}  Target {addr!r} lost connection to the server."
 SNAPSHOT_SAVED_TEMPLATE = "\n{time} Snapshot saved to: {path}"
 SCREENSHOT_SAVED_TEMPLATE = "\n{time} Screenshot saved to: {path}"
-TIME_FMT = "%H:%M:%S"
-
-# Message shown when there are no connected clients
 NO_CLIENTS_TEMPLATE = "No connected client found."
+TIME_FMT = "%H:%M:%S"
 
 
 def ts():
