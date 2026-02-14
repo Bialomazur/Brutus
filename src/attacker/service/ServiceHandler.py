@@ -1,9 +1,7 @@
-from abc import ABC
-
 from src.attacker.service.Service import Service
 
 
-class ServiceHandler(ABC):
+class ServiceHandler:
     services = {}
 
     def __init__(self, service: Service, service_id: str):

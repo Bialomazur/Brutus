@@ -22,7 +22,7 @@ COMMANDS = {
 
 class Command(ABC):
     """Base command interface: implement execute(window, command, context)."""
-    ERROR_MESSSAGE_PREFIX = "[Error] "
+    ERROR_MESSAGE_PREFIX = "[Error] "
 
 
     def execute(self, window, command: str, context: dict):
@@ -38,7 +38,7 @@ class Command(ABC):
         return 1
 
     def error (self, window, message: str):
-        window.Output.addItem(f"{self.__class__.ERROR_MESSSAGE_PREFIX} {message}")
+        window.Output.addItem(f"{self.__class__.ERROR_MESSAGE_PREFIX} {message}")
 
 
 
