@@ -1,24 +1,5 @@
 from abc import ABC
 
-from src.attacker.terminal.command.ShowHeaderCommand import ShowHeaderCommand
-from src.attacker.terminal.command.ShowClientsCommand import ShowClientsCommand
-from src.attacker.terminal.command.EchoCommand import EchoCommand
-from src.attacker.terminal.command.QuitCommand import QuitCommand
-from src.attacker.terminal.command.IPCommand import IPCommand
-from src.attacker.terminal.command.SendAtCommand import SendAtCommand
-
-COMMANDS = {
-    "ip": IPCommand(),
-    "clear": ShowHeaderCommand(),
-    "quit": QuitCommand(),
-    "exit": QuitCommand(),
-    "echo ": EchoCommand(),            # prefix: "echo <text>"
-    "show_clients": ShowClientsCommand(),
-    "show clients": ShowClientsCommand(),
-    "sc": ShowClientsCommand(),
-    "@": SendAtCommand(),              # special handler for "<id>@<cmd>"
-}
-
 
 class Command(ABC):
     """Base command interface: implement execute(window, command, context)."""
@@ -39,6 +20,28 @@ class Command(ABC):
 
     def error (self, window, message: str):
         window.Output.addItem(f"{self.__class__.ERROR_MESSAGE_PREFIX} {message}")
+
+
+# Import command classes AFTER Command is defined to avoid circular imports
+from src.attacker.terminal.command.ShowHeaderCommand import ShowHeaderCommand
+from src.attacker.terminal.command.ShowClientsCommand import ShowClientsCommand
+from src.attacker.terminal.command.EchoCommand import EchoCommand
+from src.attacker.terminal.command.QuitCommand import QuitCommand
+from src.attacker.terminal.command.IPCommand import IPCommand
+from src.attacker.terminal.command.SendAtCommand import SendAtCommand
+
+COMMANDS = {
+    "ip": IPCommand(),
+    "clear": ShowHeaderCommand(),
+    "quit": QuitCommand(),
+    "exit": QuitCommand(),
+    "echo ": EchoCommand(),            # prefix: "echo <text>"
+    "show_clients": ShowClientsCommand(),
+    "show clients": ShowClientsCommand(),
+    "sc": ShowClientsCommand(),
+    "@": SendAtCommand(),              # special handler for "<id>@<cmd>"
+}
+
 
 
 
