@@ -2,3 +2,4 @@ requests
 pynput
 opencv-python
 pyaudio
+pyasyncore
