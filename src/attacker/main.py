@@ -1,7 +1,7 @@
 import socket
 import os
 import threading
-import asyncore
+import asyncio
 import requests
 import json
 
@@ -26,8 +26,21 @@ def start_server_in_background(window):
     try:
         # pass the shared connections dict into Server
         server = Server(HOST, PORT, window, connections)
-        print("Server running!")
-        t = threading.Thread(target=asyncore.loop, kwargs={"timeout":1}, daemon=True)
+        
+        # Create a new event loop for the background thread
+        def run_server():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            try:
+                loop.run_until_complete(server.start())
+                print("Server running!")
+                loop.run_until_complete(server.serve_forever())
+            except Exception as e:
+                print(f"Server error: {e}")
+            finally:
+                loop.close()
+        
+        t = threading.Thread(target=run_server, daemon=True)
         t.start()
     except Exception as e:
         print(f"Failed to start server: {e}")
