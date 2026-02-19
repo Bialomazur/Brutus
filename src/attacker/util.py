@@ -5,8 +5,8 @@ VERSION = "BRUTUS V. 1.0 Beta"
 
 # String templates and helpers to avoid inconsistent inline formatting
 HEADER_TEMPLATE = "{version:<40}{ip}"
-CLIENT_HEADER = "ID\t\t       Address\t\t\t   Location\n\n"
-CLIENT_ROW_TEMPLATE = "{id}\t\t{addr}\t\t{location}"
+CLIENT_HEADER = "ID\t\t       Address\n\n"
+CLIENT_ROW_TEMPLATE = "{id}\t\t{addr}"
 IP_TEMPLATE = "Current IP: {ip}"
 ERROR_CLIENT_NOT_FOUND = "[ ! ] ERROR Client not found."
 UNKNOWN_COMMAND_TEMPLATE = "[ ? ] Unknown command: {command}"
