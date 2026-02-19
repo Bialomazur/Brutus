@@ -5,7 +5,6 @@ from src.attacker.util import CLIENT_HEADER, CLIENT_ROW_TEMPLATE, NO_CLIENTS_TEM
 class ShowClientsCommand(Command):
     def execute(self, window, command: str, context: dict):
         connections = context.get("connections", {})
-        locator = context.get("locator")
         # If no clients connected, print a friendly message instead of an empty table
         if not connections:
             window.Output.addItem(NO_CLIENTS_TEMPLATE)
@@ -16,7 +15,6 @@ class ShowClientsCommand(Command):
             CLIENT_ROW_TEMPLATE.format(
                 id=key,
                 addr=connections[key].addr,
-                location=locator.get_location(connections[key].addr[0])
             )
             for key in connections.keys()
         )
