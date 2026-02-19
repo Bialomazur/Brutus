@@ -9,7 +9,6 @@ from src.attacker.terminal.command.Command import dispatch as command_dispatch
 from src.attacker.terminal.server.Server import Server
 from src.attacker.terminal.Terminal import Terminal
 from src.attacker.util import VERSION, UNKNOWN_COMMAND_TEMPLATE
-from src.attacker.service.LocatorService import locator
 
 """ constants """
 CURRENT_FOLDER = os.path.dirname(os.path.realpath(__file__))
@@ -62,7 +61,6 @@ def main():
     context = {
         "connections": connections,
         "ip": ip,
-        "locator": locator,
         "version": VERSION,
     }
 
