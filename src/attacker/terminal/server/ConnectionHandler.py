@@ -21,7 +21,7 @@ SCREENSHOT_NAME_FMT = "ss_{client_id}_{num}.png"
 
 DATA_TAKEN_SCREENSHOT = "TS"
 DATA_TAKEN_SNAPSHOT = "SS"
-DATA_START_LIVESTREAM = "VL"
+# DATA_START_LIVESTREAM removed
 DATA_START_AUDIOSTREAM = "VA"
 
 CONNECTION_DISCONNECT_TEMPLATE = "[{time}] Client {addr} disconnected"
@@ -62,9 +62,7 @@ class ConnectionHandler:
                         ConnectionHandler.receiving_screenshot = True
                     elif data == DATA_TAKEN_SNAPSHOT:
                         ConnectionHandler.receiving_snapshot = True
-                    elif data == DATA_START_LIVESTREAM:
-                        video_thread = threading.Thread(target=ConnectionHandler.video_stream)
-                        video_thread.start()
+                    # elif data == DATA_START_LIVESTREAM logic removed
                     elif data == DATA_START_AUDIOSTREAM:
                         audio_thread = threading.Thread(target=ConnectionHandler.audio_stream)
                         audio_thread.start()
@@ -105,9 +103,7 @@ class ConnectionHandler:
             except Exception:
                 pass
 
-    @staticmethod
-    def video_stream():
-        return
+    # video_stream removed
 
     @staticmethod
     def audio_stream():
