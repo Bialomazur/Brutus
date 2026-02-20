@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Learning and experimentation repository."
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies = ["requests", "pynput", "opencv-python", "pyaudio"]
+dependencies = ["requests", "pynput", "pyaudio"]
 
 [project.optional-dependencies]
 dev = ["ruff", "pre-commit"]
