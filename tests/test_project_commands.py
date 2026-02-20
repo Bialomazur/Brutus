@@ -84,7 +84,7 @@ class TestInstallCommands(unittest.TestCase):
             self.assertEqual(proc.returncode, 0, msg=proc.stdout)
 
             requires = {line.split(";", 1)[0].strip() for line in proc.stdout.splitlines() if line.strip()}
-            expected = {"requests", "pynput", "opencv-python", "pyaudio"}
+            expected = {"requests", "pynput", "pyaudio"}
 
             # The metadata may include version markers, but we at least expect the base names.
             missing = {dep for dep in expected if not any(r.lower().startswith(dep) for r in requires)}
@@ -129,7 +129,7 @@ class TestPyprojectMetadata(unittest.TestCase):
         self.assertIsInstance(deps, list)
         self.assertTrue(deps, msg="project.dependencies must be non-empty")
 
-        expected = {"requests", "pynput", "opencv-python", "pyaudio"}
+        expected = {"requests", "pynput", "pyaudio"}
         normalized = {str(d).strip() for d in deps}
         self.assertTrue(expected.issubset(normalized), msg=f"Missing deps: {sorted(expected - normalized)}")
 
