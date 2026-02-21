@@ -1,39 +1,128 @@
+# --- Python ---
 # Virtual environments
 .venv/
 venv/
 env/
+ENV/
+bin/
+lib/
+include/
+share/
+pyvenv.cfg
+pip-selfcheck.json
 
 # Python bytecode
 __pycache__/
 *.py[cod]
-*.pyc
 *$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# Build / packaging artifacts
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
 # Testing, coverage and caches
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
 .mypy_cache/
+.pyre_cache/
+.pytype/
+.ruff_cache/
+.hypothesis/
+.nox/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.incremental/
 
-# Build / packaging artifacts
-build/
-dist/
-*.egg-info/
-pip-wheel-metadata/
+# --- IDEs and Editors ---
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/snippets/
+.history/
+*.code-workspace
 
-# IDEs and editors
-.vscode/
+# IntelliJ / PyCharm
 .idea/
 *.iml
+*.iws
 
-# macOS / Windows OS files
+# Other Editors
+.vscode-test/
+.sublime-project
+.sublime-workspace
+.project
+.pydevproject
+.settings/
+.swp
+.swo
+*~
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# --- Operating Systems ---
+# macOS
 .DS_Store
-Thumbs.db
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+Network Trash Folder
+Temporary Items
+.apdisk
 
-# Environment / secret files
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# --- Environment / Secrets ---
 .env
 .env.local
+.env.*
 secrets.json
+*.pem
+*.key
+*.crt
 
-# Logs and misc
+# --- Logs and Misc ---
 *.log
+*.bak
+*.tmp
+*.temp
+out/
+node_modules/
