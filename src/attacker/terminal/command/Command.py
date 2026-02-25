@@ -29,9 +29,12 @@ from src.attacker.terminal.command.EchoCommand import EchoCommand
 from src.attacker.terminal.command.QuitCommand import QuitCommand
 from src.attacker.terminal.command.IPCommand import IPCommand
 from src.attacker.terminal.command.SendAtCommand import SendAtCommand
+from src.attacker.terminal.command.HelpCommand import HelpCommand
 
 COMMANDS = {
     "ip": IPCommand(),
+    "help": HelpCommand(),
+    "--help": HelpCommand(),
     "clear": ShowHeaderCommand(),
     "quit": QuitCommand(),
     "exit": QuitCommand(),
