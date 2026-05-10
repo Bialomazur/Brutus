@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "brutus"
-version = "0.1.0"
-description = "Learning and experimentation repository."
+version = "0.2.0"
+description = "Educational C2 framework — for authorized lab use only."
 readme = "README.md"
-requires-python = ">=3.9"
-dependencies = ["requests", "pynput", "pyaudio"]
+requires-python = ">=3.10"
+dependencies = ["requests", "pynput", "opencv-python", "pyaudio", "pyautogui"]
 
 [project.optional-dependencies]
-dev = ["ruff", "pre-commit"]
+dev = ["ruff", "pre-commit", "pytest"]
 
 [project.scripts]
 brutus = "brutus.cli:main"
@@ -21,11 +21,11 @@ package-dir = {"" = "."}
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["brutus*", "src*"]
+include = ["brutus*"]
 
 [tool.ruff]
-line-length = 88
-target-version = "py39"
+line-length = 100
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

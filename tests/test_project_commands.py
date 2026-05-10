@@ -7,7 +7,6 @@ import venv
 from pathlib import Path
 from typing import Dict, List, Optional
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -83,12 +82,17 @@ class TestInstallCommands(unittest.TestCase):
             proc = _run([str(py), "-c", code])
             self.assertEqual(proc.returncode, 0, msg=proc.stdout)
 
-            requires = {line.split(";", 1)[0].strip() for line in proc.stdout.splitlines() if line.strip()}
-            expected = {"requests", "pynput", "pyaudio"}
-
-            # The metadata may include version markers, but we at least expect the base names.
-            missing = {dep for dep in expected if not any(r.lower().startswith(dep) for r in requires)}
-            self.assertFalse(missing, msg=f"Missing dependencies from metadata: {sorted(missing)}\n{proc.stdout}")
+            requires = {
+                line.split(";", 1)[0].strip() for line in proc.stdout.splitlines() if line.strip()
+            }
+            expected_rt = {"requests", "pynput", "opencv-python", "pyaudio", "pyautogui"}
+            missing = {
+                dep for dep in expected_rt if not any(r.lower().startswith(dep) for r in requires)
+            }
+            self.assertFalse(
+                missing,
+                msg=f"Missing dependencies from metadata: {sorted(missing)}\n{proc.stdout}",
+            )
 
 
 class TestLintAndFormatCommands(unittest.TestCase):
@@ -129,9 +133,12 @@ class TestPyprojectMetadata(unittest.TestCase):
         self.assertIsInstance(deps, list)
         self.assertTrue(deps, msg="project.dependencies must be non-empty")
 
-        expected = {"requests", "pynput", "pyaudio"}
+        expected = {"requests", "pynput", "opencv-python", "pyaudio", "pyautogui"}
         normalized = {str(d).strip() for d in deps}
-        self.assertTrue(expected.issubset(normalized), msg=f"Missing deps: {sorted(expected - normalized)}")
+        self.assertTrue(
+            expected.issubset(normalized),
+            msg=f"Missing deps: {sorted(expected - normalized)}",
+        )
 
         opt = project.get("optional-dependencies", {})
         self.assertIn("dev", opt)
@@ -147,12 +154,27 @@ class TestPyprojectMetadata(unittest.TestCase):
         self.assertIn("brutus", scripts)
         self.assertEqual(scripts["brutus"], "brutus.cli:main")
 
-        # Validate import path and callability.
         import importlib
 
         mod = importlib.import_module("brutus.cli")
         self.assertTrue(hasattr(mod, "main"), msg="brutus.cli must define main")
         self.assertTrue(callable(mod.main), msg="brutus.cli:main must be callable")
+
+    def test_attacker_and_victim_subcommands_exist(self) -> None:
+        """CLI help output must mention both subcommands."""
+        import importlib
+
+        mod = importlib.import_module("brutus.cli")
+        import contextlib
+        import io
+
+        buf = io.StringIO()
+        with contextlib.suppress(SystemExit):
+            with contextlib.redirect_stdout(buf):
+                mod.main(["--help"])
+        help_text = buf.getvalue()
+        self.assertIn("attacker", help_text)
+        self.assertIn("victim", help_text)
 
 
 class TestScriptRegistration(unittest.TestCase):
@@ -174,4 +196,4 @@ class TestScriptRegistration(unittest.TestCase):
 
             proc = _run([str(brutus_exe), "--help"], cwd=REPO_ROOT)
             self.assertEqual(proc.returncode, 0, msg=proc.stdout)
-            self.assertIn("Project CLI scaffold", proc.stdout)
+            self.assertIn("brutus", proc.stdout.lower())
