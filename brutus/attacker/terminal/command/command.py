@@ -1,6 +1,7 @@
 from abc import ABC
 
 from brutus.attacker.terminal.command.echo import EchoCommand
+from brutus.attacker.terminal.command.help import HelpCommand
 from brutus.attacker.terminal.command.ip import IPCommand
 from brutus.attacker.terminal.command.quit import QuitCommand
 from brutus.attacker.terminal.command.send_at import SendAtCommand
@@ -16,6 +17,8 @@ COMMANDS: dict = {
     "show_clients": ShowClientsCommand(),
     "show clients": ShowClientsCommand(),
     "sc": ShowClientsCommand(),
+    "help": HelpCommand(),
+    "?": HelpCommand(),
     "@": SendAtCommand(),
 }
 
